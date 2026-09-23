@@ -1,18 +1,29 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "buildCommand": "echo WordPress theme — use PHP hosting for wp-admin",
-  "outputDirectory": ".",
-  "rewrites": [],
-  "redirects": [
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "headers": [
     {
-      "source": "/wp-admin/:path*",
-      "destination": "/static/wp-admin-notice.html",
-      "permanent": false
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=60, s-maxage=86400, stale-while-revalidate=604800" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
     },
     {
-      "source": "/wp-login.php",
-      "destination": "/static/wp-admin-notice.html",
-      "permanent": false
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
     }
+  ],
+  "redirects": [
+    { "source": "/wp-admin", "destination": "/wp-admin-notice", "permanent": false },
+    { "source": "/wp-admin/:path*", "destination": "/wp-admin-notice", "permanent": false },
+    { "source": "/wp-login.php", "destination": "/wp-admin-notice", "permanent": false }
   ]
 }

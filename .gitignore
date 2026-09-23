@@ -1,5 +1,8 @@
 .netlify/
+.vercel/
 .DS_Store
 Thumbs.db
 *.log
 node_modules/
+
+.vercel

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Avtodealer — TANK дилер лендинг (WordPress tema)">
+  <title>Avtodealer TANK</title>
+  <link rel="icon" href="/assets/main-logo.png">
+  <style>
+    :root { --bg:#0c0f12; --text:#f3f4f6; --muted:#8b95a5; --accent:#ff9549; --accent2:#ff6a00; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 12% -10%, rgba(255,106,0,.18), transparent 55%),
+        radial-gradient(700px 360px at 90% 0%, rgba(255,149,73,.08), transparent 50%),
+        linear-gradient(180deg, #10151a 0%, var(--bg) 45%);
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 12vh 1.25rem 3rem; }
+    .brand { display:flex; align-items:center; gap:.75rem; margin-bottom: 1.5rem; }
+    .brand img { width: 42px; height: 42px; object-fit: contain; }
+    .brand span { font-size: clamp(1.4rem, 3vw, 1.85rem); font-weight: 700; letter-spacing: .02em; }
+    h1 { margin: 0 0 .75rem; font-size: clamp(1.75rem, 4.5vw, 2.6rem); line-height: 1.1; font-weight: 700; }
+    p { margin: 0 0 1rem; color: var(--muted); font-family: system-ui, sans-serif; font-size: 1rem; line-height: 1.55; }
+    .cta { display:flex; flex-wrap:wrap; gap:.75rem; margin-top: 1.5rem; }
+    a.btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
+      text-decoration:none; font-family: system-ui, sans-serif; font-weight: 650; font-size: .95rem;
+      border-radius: 12px; padding: .85rem 1.15rem; transition: transform .15s ease, background .15s ease;
+    }
+    a.btn:hover { transform: translateY(-1px); }
+    a.primary { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #111; }
+    a.ghost { border: 1px solid rgba(255,255,255,.14); color: var(--text); background: rgba(255,255,255,.03); }
+    .note { margin-top: 2rem; font-family: system-ui, sans-serif; font-size: .85rem; color: var(--muted); }
+    code { color: #fff; background: #1a222b; padding: .12rem .4rem; border-radius: 6px; font-size: .82rem; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand">
+      <img src="/assets/main-logo.png" width="42" height="42" alt="">
+      <span>АВТОРУСЬ TANK</span>
+    </div>
+    <h1>Avtodealer — Vercel preview</h1>
+    <p>Bu yerda tezkor statik preview. To‘liq sayt, CRUD va <strong>wp-admin</strong> uchun WordPress + PHP hosting kerak (localdagi kabi).</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/qobiljonov22/avtodealer">GitHub →</a>
+      <a class="btn ghost" href="/wp-admin-notice">wp-admin haqida</a>
+    </div>
+    <p class="note">Tema: <code>wp-content/themes/avtodealer</code> · Hostingda <code>hosting-wp-config.php</code> ulang</p>
+  </main>
+</body>
+</html>

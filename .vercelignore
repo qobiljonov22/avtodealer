@@ -1,0 +1,24 @@
+# Vercelga faqat engil static preview (public/)
+.php
+functions/
+sections/
+header/
+footer/
+Font/
+images/
+js/
+style/
+style.css
+.vscode/
+.netlify/
+netlify.toml
+hosting-wp-config.php
+page-*.php
+front-page.php
+404.php
+index.php
+single.php
+header.php
+footer.php
+functions.php
+*.md
