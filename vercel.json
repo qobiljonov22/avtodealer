@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "cleanUrls": true,
-  "trailingSlash": false,
+  "trailingSlash": true,
   "framework": null,
   "buildCommand": null,
   "outputDirectory": "public",
@@ -15,15 +15,21 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ],
   "redirects": [
-    { "source": "/wp-admin", "destination": "/wp-admin-notice", "permanent": false },
-    { "source": "/wp-admin/:path*", "destination": "/wp-admin-notice", "permanent": false },
-    { "source": "/wp-login.php", "destination": "/wp-admin-notice", "permanent": false }
+    { "source": "/wp-admin", "destination": "/wp-admin-notice/", "permanent": false },
+    { "source": "/wp-admin/:path*", "destination": "/wp-admin-notice/", "permanent": false },
+    { "source": "/wp-login.php", "destination": "/wp-admin-notice/", "permanent": false }
   ]
 }
