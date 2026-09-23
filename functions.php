@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once get_template_directory() . '/functions/setup.php';
+require_once get_template_directory() . '/functions/host.php';
 require_once get_template_directory() . '/functions/assets.php';
 require_once get_template_directory() . '/functions/polylang.php';
 require_once get_template_directory() . '/functions/header.php';

@@ -1,0 +1,18 @@
+# Bu repo — WordPress TEMA (PHP).
+# Netlify PHP/MySQL ishlatmaydi → wp-admin bu yerda ishlamaydi.
+# To‘liq sayt + wp-admin uchun PHP hosting kerak (Beget, Hostinger, Timeweb…).
+# Netlify faqat statik preview uchun.
+
+[build]
+  publish = "."
+  command = "echo WordPress theme — use PHP hosting for wp-admin"
+
+[[redirects]]
+  from = "/wp-admin/*"
+  to = "/static/wp-admin-notice.html"
+  status = 302
+
+[[redirects]]
+  from = "/wp-login.php"
+  to = "/static/wp-admin-notice.html"
+  status = 302

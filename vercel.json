@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "buildCommand": "echo WordPress theme — use PHP hosting for wp-admin",
+  "outputDirectory": ".",
+  "rewrites": [],
+  "redirects": [
+    {
+      "source": "/wp-admin/:path*",
+      "destination": "/static/wp-admin-notice.html",
+      "permanent": false
+    },
+    {
+      "source": "/wp-login.php",
+      "destination": "/static/wp-admin-notice.html",
+      "permanent": false
+    }
+  ]
+}
