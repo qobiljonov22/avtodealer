@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "tailwindCSS.includeLanguages": {
+        "php": "html",
+        "html": "html"
+    },
+    "editor.quickSuggestions": {
+        "strings": "on"
+    },
+    "tailwindCSS.experimental.configFile": "style/main.css"
+}
