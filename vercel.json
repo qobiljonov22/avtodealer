@@ -27,9 +27,13 @@
       ]
     }
   ],
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/admin/", "destination": "/admin.html" },
+    { "source": "/cms", "destination": "/admin.html" },
+    { "source": "/cms/", "destination": "/admin.html" }
+  ],
   "redirects": [
-    { "source": "/cms", "destination": "/admin/", "permanent": false },
-    { "source": "/cms/", "destination": "/admin/", "permanent": false },
     { "source": "/wp-admin-notice", "destination": "/admin/", "permanent": false },
     { "source": "/wp-admin-notice/", "destination": "/admin/", "permanent": false }
   ]
