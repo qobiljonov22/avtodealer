@@ -1,0 +1,23 @@
+Avtodealer — OpenServersiz ham ishlaydi
+
+SAYТ + ADMIN (server o‘chiq / OpenServer o‘chiq)
+-----------------------------------------------
+1) Loyiha papkasida:
+     .\serve-static.ps1
+2) Brauzer:
+     Sayt:  http://127.0.0.1:8080/
+     Admin: http://127.0.0.1:8080/admin/
+3) Admin → Saqlash → saytni yangilang (F5)
+   Ma’lumot shu brauzerda localStorage da qoladi.
+
+Vercel:
+  Sayt:  https://SIZNING.vercel.app/
+  Admin: https://SIZNING.vercel.app/admin/
+
+OpenServer YOQILGANDA (WordPress):
+  Sayt:  http://avtodealer.local/
+  Admin: http://avtodealer.local/wp-admin  → Avtodealer Studio
+
+Ikkalasi parallel ishlaydi:
+  - Statik admin = offline / Vercel
+  - WP admin = OpenServer / PHP hosting

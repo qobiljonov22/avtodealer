@@ -3,53 +3,228 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin — Avtodealer</title>
+  <title>Avtodealer Admin</title>
   <style>
-    body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui,sans-serif;background:#0c0f12;color:#f3f4f6}
-    main{max-width:640px;padding:2rem}
-    h1{color:#ff9549;font-size:1.4rem;margin:0 0 .75rem}
-    p{line-height:1.55;color:#c7d0dc;margin:0 0 .85rem}
-    code{background:#1a222b;padding:.12rem .4rem;border-radius:6px;color:#fff;font-size:.92em}
-    a{color:#ff9549}
-    .box{margin:1.1rem 0;padding:1rem 1.1rem;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.03)}
-    .ok{border-color:rgba(61,220,132,.35)}
-    .bad{border-color:rgba(255,100,80,.35)}
-    ol{margin:.4rem 0 0;padding-left:1.2rem;color:#c7d0dc;line-height:1.55}
-    li{margin:.35rem 0}
+    :root{--bg:#0e1114;--panel:#161b20;--line:rgba(255,255,255,.08);--text:#eef1f4;--muted:#9aa3ad;--accent:#ff9549;--ok:#3ddc84}
+    *{box-sizing:border-box}
+    body{margin:0;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#0c0f12;position:sticky;top:0;z-index:10}
+    h1{margin:0;font-size:1.05rem;color:var(--accent)}
+    .actions{display:flex;flex-wrap:wrap;gap:8px}
+    button,a.btn{appearance:none;border:1px solid var(--line);background:#1a222b;color:var(--text);border-radius:10px;padding:8px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+    button.primary{background:var(--accent);color:#181818;border-color:transparent;font-weight:600}
+    button.danger{background:transparent;border-color:rgba(255,100,80,.4);color:#ff8d7a}
+    button:disabled{opacity:.5;cursor:wait}
+    .wrap{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 58px)}
+    @media(max-width:800px){.wrap{grid-template-columns:1fr}}
+    nav{border-right:1px solid var(--line);padding:12px;background:#0c0f12}
+    nav button{width:100%;justify-content:flex-start;margin-bottom:6px;background:transparent}
+    nav button.on{background:#1a222b;border-color:rgba(255,149,73,.45);color:var(--accent)}
+    main{padding:16px 18px 40px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+    .card h2{margin:0 0 4px;font-size:1rem}
+    .card p.note{margin:0 0 14px;color:var(--muted);font-size:12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}}
+    label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+    label.wide{grid-column:1/-1}
+    input,textarea,select{width:100%;border:1px solid var(--line);background:#0e1318;color:var(--text);border-radius:10px;padding:10px 12px;font:inherit}
+    textarea{min-height:88px;resize:vertical}
+    .toast{position:fixed;right:16px;bottom:16px;background:#1a222b;border:1px solid var(--line);padding:10px 14px;border-radius:12px;display:none;z-index:50}
+    .toast.show{display:block}
+    .toast.ok{border-color:rgba(61,220,132,.4)}
+    .banner{background:rgba(255,149,73,.08);border:1px solid rgba(255,149,73,.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;color:#ffd7bc;font-size:13px}
+    code{background:#1a222b;padding:1px 6px;border-radius:6px}
   </style>
 </head>
 <body>
-  <main>
-    <h1>WordPress Admin</h1>
-    <p>Sayt matnlari <strong>WordPress</strong> orqali boshqariladi. Admin ochilishi uchun <strong>PHP + MySQL</strong> kerak.</p>
-
-    <div class="box ok">
-      <p><strong>Local (ishlaydi)</strong></p>
-      <p>OpenServer yoqilgan bo‘lsin → oching:</p>
-      <p><code>http://avtodealer.local/wp-admin</code></p>
-      <p>Avtodealer Studio: chap menyu → <strong>Avtodealer</strong></p>
+  <header>
+    <h1>Avtodealer Admin · offline CMS</h1>
+    <div class="actions">
+      <a class="btn" href="/" target="_blank">Saytni ochish</a>
+      <button type="button" id="btn-export">JSON export</button>
+      <button type="button" class="danger" id="btn-reset">Defaultga qaytarish</button>
+      <button type="button" class="primary" id="btn-save">Saqlash</button>
     </div>
+  </header>
+  <div class="wrap">
+    <nav id="tabs"></nav>
+    <main>
+      <div class="banner">
+        OpenServer <strong>yoqilmasa ham</strong> ishlaydi. Ma’lumot brauzerda (<code>localStorage</code>) saqlanadi.
+        WordPress ochiq bo‘lsa, alohida <code>/wp-admin</code> ham ishlayveradi.
+      </div>
+      <div id="panel"></div>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
 
-    <div class="box bad">
-      <p><strong>Vercel (bu domen)</strong></p>
-      <p>Bu yerda faqat <em>statik preview</em>. PHP yo‘q → <code>/wp-admin</code> ochilmaydi.</p>
-      <p>Vercel xavfsizlik qoidasi <code>/wp-admin</code> ni <strong>403 Forbidden</strong> qilib bloklaydi — bu tema xatosi emas.</p>
-    </div>
+  <script src="/js/avto-content.js"></script>
+  <script>
+(function () {
+  var tabs = [
+    { id: 'header', title: 'Header' },
+    { id: 'hero', title: 'Hero' },
+    { id: 'catalog', title: 'Catalog' },
+    { id: 'footer', title: 'Footer' },
+    { id: 'modal', title: 'Modal' }
+  ];
+  var active = 'header';
+  var data = null;
+  var panel = document.getElementById('panel');
+  var tabsEl = document.getElementById('tabs');
+  var toastEl = document.getElementById('toast');
 
-    <div class="box">
-      <p><strong>Serverda ham admin kerak bo‘lsa</strong></p>
-      <ol>
-        <li>Desktopdagi <code>avtodealer-FULL-WordPress-PHP.zip</code> ni oching</li>
-        <li>Beget / Hostinger / Timeweb (PHP + MySQL) ga <code>wordpress/</code> ni yuklang</li>
-        <li>O‘rnatishdan keyin: <code>https://SIZNING-DOMEN/wp-admin</code></li>
-        <li><code>wp-config.php</code> ichida <code>That's all, stop editing!</code> dan oldin:<br>
-          <code>require_once __DIR__ . '/wp-content/themes/avtodealer/hosting-wp-config.php';</code>
-        </li>
-      </ol>
-      <p>Shu PHP domen — asosiy sayt + admin. Vercel faqat ko‘rib chiqish uchun qolishi mumkin.</p>
-    </div>
+  var fields = {
+    header: [
+      ['brand', 'Brand'],
+      ['subtitle', 'Subtitle'],
+      ['phone', 'Telefon'],
+      ['phone_href', 'Tel link'],
+      ['status', 'Status'],
+      ['hours', 'Ish vaqti'],
+      ['address', 'Manzil', 'textarea'],
+      ['address_url', 'Manzil URL'],
+      ['service_label', 'Servis matni'],
+      ['service_url', 'Servis URL'],
+      ['testdrive_label', 'Test-drive matni'],
+      ['testdrive_url', 'Test-drive URL'],
+      ['callback_label', 'Callback tugma'],
+      ['loader_text', 'Loader matni'],
+      ['menu_label', 'Menu label']
+    ],
+    hero: [
+      ['eyebrow', 'Eyebrow'],
+      ['title', 'Title'],
+      ['subtitle', 'Subtitle', 'textarea'],
+      ['cta_label', 'CTA'],
+      ['cta_url', 'CTA URL']
+    ],
+    catalog: [
+      ['offer_title', 'Offer title', 'textarea'],
+      ['offer_cta_label', 'Offer CTA'],
+      ['offer_cta_url', 'Offer URL'],
+      ['countdown_days', 'Kun'],
+      ['countdown_hours', 'Soat'],
+      ['countdown_mins', 'Daqiqa'],
+      ['countdown_secs', 'Soniya'],
+      ['feature1_title', 'Card 1 title'],
+      ['feature1_text', 'Card 1 text', 'textarea'],
+      ['feature2_title', 'Card 2 title'],
+      ['feature2_text', 'Card 2 text', 'textarea'],
+      ['feature3_title', 'Card 3 title'],
+      ['feature3_text', 'Card 3 text', 'textarea'],
+      ['promo_title', 'Promo', 'textarea'],
+      ['car1_title', 'Car 1'],
+      ['car2_title', 'Car 2']
+    ],
+    footer: [
+      ['disclaimer_title', 'Disclaimer title'],
+      ['link_legal', 'Huquqiy link'],
+      ['link_promo', 'Aksiya link'],
+      ['copy_note', 'Copy note', 'textarea'],
+      ['legal1', 'Legal 1', 'textarea'],
+      ['legal2', 'Legal 2', 'textarea']
+    ],
+    modal: [
+      ['title', 'Title'],
+      ['subtitle', 'Subtitle', 'textarea'],
+      ['model_label', 'Model label'],
+      ['model_options', 'Modellar (har qator)', 'textarea'],
+      ['phone_label', 'Phone label'],
+      ['phone_placeholder', 'Phone placeholder'],
+      ['button', 'Button'],
+      ['consent', 'Consent', 'textarea'],
+      ['success', 'Success'],
+      ['close_label', 'Close label']
+    ]
+  };
 
-    <p><a href="/">← Saytga qaytish</a></p>
-  </main>
+  function toast(msg, ok) {
+    toastEl.textContent = msg;
+    toastEl.className = 'toast show' + (ok ? ' ok' : '');
+    setTimeout(function () { toastEl.className = 'toast'; }, 2200);
+  }
+
+  function readForm() {
+    if (!data) data = AvtoContent.deepMerge(AvtoContent.DEFAULTS, {});
+    if (!data[active]) data[active] = {};
+    qsa('[data-field]').forEach(function (inp) {
+      data[active][inp.getAttribute('data-field')] = inp.value;
+    });
+  }
+
+  function qsa(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+
+  function renderTabs() {
+    tabsEl.innerHTML = tabs.map(function (t) {
+      return '<button type="button" data-tab="' + t.id + '" class="' + (t.id === active ? 'on' : '') + '">' + t.title + '</button>';
+    }).join('');
+    qsa('[data-tab]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        readForm();
+        active = btn.getAttribute('data-tab');
+        render();
+      });
+    });
+  }
+
+  function render() {
+    renderTabs();
+    var section = (data && data[active]) || {};
+    var list = fields[active] || [];
+    var html = '<div class="card"><h2>' + active + '</h2><p class="note">Saqlash → saytda darhol ko‘rinadi (shu brauzer).</p><div class="grid">';
+    list.forEach(function (f) {
+      var key = f[0], label = f[1], type = f[2] || 'text';
+      var val = section[key] != null ? section[key] : '';
+      var wide = type === 'textarea' ? ' wide' : '';
+      if (type === 'textarea') {
+        html += '<label class="' + wide.trim() + '">' + label + '<textarea data-field="' + key + '">' + esc(val) + '</textarea></label>';
+      } else {
+        html += '<label class="' + wide.trim() + '">' + label + '<input data-field="' + key + '" value="' + escAttr(val) + '"></label>';
+      }
+    });
+    html += '</div></div>';
+    panel.innerHTML = html;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  }
+  function escAttr(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  }
+
+  function save() {
+    readForm();
+    AvtoContent.saveContent(data);
+    data = AvtoContent.deepMerge(AvtoContent.DEFAULTS, AvtoContent.readLocal() || {});
+    toast('Saqlandi · saytni yangilang', true);
+  }
+
+  document.getElementById('btn-save').addEventListener('click', save);
+  document.getElementById('btn-reset').addEventListener('click', function () {
+    if (!confirm('Barcha local o‘zgarishlar o‘chadi. Davom?')) return;
+    AvtoContent.clearLocal();
+    data = AvtoContent.deepMerge(AvtoContent.DEFAULTS, {});
+    render();
+    toast('Default tiklandi', true);
+  });
+  document.getElementById('btn-export').addEventListener('click', function () {
+    readForm();
+    var blob = AvtoContent.exportBlob(data);
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'avtodealer-content.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  AvtoContent.loadContent().then(function (d) {
+    data = d;
+    render();
+  });
+})();
+  </script>
 </body>
 </html>
