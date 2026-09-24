@@ -7,11 +7,8 @@ $title_lines = array_values(array_filter(array_map('trim', $title_lines), static
 if (count($title_lines) === 1 && preg_match('/^(.*?)\s+(на\s+выгодных\s+условиях)$/iu', $title_lines[0], $m)) {
     $title_lines = [trim($m[1]), trim($m[2])];
 }
-if (!$title_lines) {
-    $title_lines = ['Обмен по Trade-in', 'на выгодных условиях'];
-}
 ?>
-<section id="tradein" class="bg-[#181818] py-8 sm:py-10 md:py-12 lg:py-14 xl:py-16 2xl:py-[72px] 3xl:py-20" aria-label="Trade-in">
+<section id="tradein" class="bg-[#181818] py-8 sm:py-10 md:py-12 lg:py-14 xl:py-16 2xl:py-[72px] 3xl:py-20" aria-label="<?php echo esc_attr($title_lines[0] ?? 'Trade-in'); ?>">
     <div class="container mx-auto">
         <div class="flex flex-col items-stretch gap-5 sm:gap-6 md:flex-row md:items-center md:gap-8 lg:gap-10 xl:gap-12 2xl:gap-14">
             <div class="w-full shrink-0 md:w-[48%] lg:w-[50%] xl:w-[52%]">

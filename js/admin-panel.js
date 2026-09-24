@@ -528,7 +528,9 @@
           field('phone', 'Telefon', d.phone) +
           field('phone_href', 'Tel link', d.phone_href) +
           field('status', 'Status', d.status) +
-          field('hours', 'Ish vaqti', d.hours || '')
+          field('hours', 'Ish vaqti', d.hours || '') +
+          field('menu_label', 'Menu aria-label', d.menu_label || '') +
+          field('loader_text', 'Loader matni', d.loader_text || '')
       ) +
         group(
           'Navigatsiya',
@@ -592,7 +594,11 @@
         field('offer_title', 'Offer sarlavha', d.offer_title, { wide: true }) +
           field('offer_cta_label', 'Offer tugma', d.offer_cta_label) +
           field('offer_cta_url', 'Offer URL', d.offer_cta_url) +
-          field('countdown_end', 'Countdown tugash (ISO / 2026-12-31T23:59:00)', d.countdown_end, { wide: true })
+          field('countdown_end', 'Countdown tugash (ISO / 2026-12-31T23:59:00)', d.countdown_end, { wide: true }) +
+          field('countdown_days', 'Kun label', d.countdown_days || '') +
+          field('countdown_hours', 'Soat label', d.countdown_hours || '') +
+          field('countdown_mins', 'Daqiqa label', d.countdown_mins || '') +
+          field('countdown_secs', 'Soniya label', d.countdown_secs || '')
       ) +
         group(
           'Cardlar',
@@ -608,22 +614,22 @@
           'Promo / Mashinalar',
           'bron + modeller',
           field('promo_title', 'Promo matn', d.promo_title, { wide: true, type: 'textarea' }) +
-            field('car1_title', 'Mashina 1 nomi', d.car1_title) +
-            field('car1_url', 'Mashina 1 URL', d.car1_url) +
-            field('car1_image_id', 'Mashina 1 rasm ID', d.car1_image_id, { type: 'number' }) +
-            field('car2_title', 'Mashina 2 nomi', d.car2_title) +
-            field('car2_url', 'Mashina 2 URL', d.car2_url) +
-            field('car2_image_id', 'Mashina 2 rasm ID', d.car2_image_id, { type: 'number' })
+            field('car1_title', '1 — TANK 300 (qizil)', d.car1_title) +
+            field('car1_url', '1 — URL', d.car1_url) +
+            field('car1_image_id', '1 — rasm ID', d.car1_image_id, { type: 'number' }) +
+            field('car2_title', '2 — TANK 500 (kulrang)', d.car2_title) +
+            field('car2_url', '2 — URL', d.car2_url) +
+            field('car2_image_id', '2 — rasm ID', d.car2_image_id, { type: 'number' })
         ),
-      mediaCard('car1', 'Car 1', d.car1_image_url, 'avto-car1-pick', 'avto-car1-img') +
-        mediaCard('car2', 'Car 2', d.car2_image_url, 'avto-car2-pick', 'avto-car2-img'),
+      mediaCard('car1', '1 · TANK 300', d.car1_image_url, 'avto-car1-pick', 'avto-car1-img') +
+        mediaCard('car2', '2 · TANK 500', d.car2_image_url, 'avto-car2-pick', 'avto-car2-img'),
       d
     );
     bind();
     var a = document.getElementById('avto-car1-pick');
     var b = document.getElementById('avto-car2-pick');
-    if (a) a.addEventListener('click', mediaPick('car1_image_id', 'avto-car1-img', '[data-preview="car1"]', 'Car 1'));
-    if (b) b.addEventListener('click', mediaPick('car2_image_id', 'avto-car2-img', '[data-preview="car2"]', 'Car 2'));
+    if (a) a.addEventListener('click', mediaPick('car1_image_id', 'avto-car1-img', '[data-preview="car1"]', 'TANK 300'));
+    if (b) b.addEventListener('click', mediaPick('car2_image_id', 'avto-car2-img', '[data-preview="car2"]', 'TANK 500'));
   }
 
   function renderModels(d) {
@@ -832,6 +838,9 @@
         'footer matnlari',
         field('legal1', 'Legal 1', d.legal1, { wide: true, type: 'textarea' }) +
           field('legal2', 'Legal 2', d.legal2, { wide: true, type: 'textarea' }) +
+          field('disclaimer_title', 'Disclaimer sarlavha', d.disclaimer_title || '') +
+          field('link_legal', 'Huquqiy link', d.link_legal || '') +
+          field('link_promo', 'Aksiya link', d.link_promo || '') +
           field('copy_note', 'Pastki izoh', d.copy_note, { wide: true }) +
           field('use_header', 'Brand/telefon Headerdan (1)', d.use_header)
       ) +
@@ -862,7 +871,8 @@
           field('phone_placeholder', 'Telefon placeholder', d.phone_placeholder) +
           field('button', 'Tugma', d.button) +
           field('consent', 'Consent matn', d.consent, { wide: true, type: 'textarea' }) +
-          field('success', 'Success matn', d.success, { wide: true })
+          field('success', 'Success matn', d.success, { wide: true }) +
+          field('close_label', 'Yopish label', d.close_label || '')
       ),
       '',
       d

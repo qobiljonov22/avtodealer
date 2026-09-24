@@ -87,11 +87,11 @@ $parse_opts = static function ($raw) {
                             </div>
                             <div class="flex w-full shrink-0 flex-col gap-2 md:w-auto md:min-w-[200px] lg:min-w-[220px] xl:min-w-[240px]">
                                 <a href="<?php echo esc_url(avtodealer_href($c['cta_url'])); ?>" data-open-lead class="inline-flex items-center justify-center gap-1 rounded-xl bg-[#FF9549] px-5 py-3.5 text-[13px] font-semibold text-[#181818] transition-colors hover:bg-[#FF6A00] hover:text-white sm:text-[14px] md:py-3 lg:text-[15px] xl:px-6">
-                                    <?php echo esc_html($c['cta_label'] !== '' ? $c['cta_label'] : 'Получить предложение'); ?>
+                                    <?php echo esc_html($c['cta_label'] ?? ''); ?>
                                     <span aria-hidden="true">&gt;</span>
                                 </a>
                                 <a href="<?php echo esc_url(avtodealer_href($h['testdrive_url'] ?? '#credit')); ?>" class="inline-flex items-center justify-center gap-1 rounded-xl border border-white/20 bg-transparent px-5 py-3 text-[13px] font-semibold text-white transition-colors hover:border-[#FF6A00]/50 sm:text-[14px] lg:text-[15px]">
-                                    <?php echo esc_html($c['link_label'] !== '' ? $c['link_label'] : 'Тест-драйв'); ?>
+                                    <?php echo esc_html($c['link_label'] ?? ''); ?>
                                     <span aria-hidden="true">&gt;</span>
                                 </a>
                             </div>

@@ -28,7 +28,7 @@ $map_query = rawurlencode((string) ($c['map_query'] ?? ''));
                             <a href="<?php echo esc_url($c['phone_href']); ?>" class="mt-1.5 block text-[16px] font-bold leading-snug text-white sm:text-[17px] lg:text-[18px] xl:text-[19px]"><?php echo esc_html($c['phone']); ?></a>
                             <p class="mt-1 flex items-center gap-1.5 text-[12px] text-[#3DDC84]">
                                 <span class="h-1.5 w-1.5 rounded-full bg-[#3DDC84]"></span>
-                                <?php echo esc_html($h['status'] ?? 'Мы на связи'); ?>
+                                <?php echo esc_html($h['status'] ?? ''); ?>
                             </p>
                         </div>
                         <div>

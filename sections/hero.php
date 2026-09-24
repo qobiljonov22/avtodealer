@@ -22,10 +22,10 @@ if ($variant === 'tank300' && function_exists('avtodealer_get_hero_tank300')) {
 $eyebrow = (string) ($h['eyebrow'] ?? '');
 $title = (string) ($h['title'] ?? '');
 $subtitle = (string) ($h['subtitle'] ?? '');
-$cta_label = (string) ($h['cta_label'] ?? $h['cta_label'] ?? 'Получить предложение');
+$cta_label = (string) ($h['cta_label'] ?? '');
 $cta_url = (string) ($h['cta_url'] ?? '#credit');
 $image_url = (string) ($h['image_url'] ?? '');
-$image_mobile_url = (string) ($h['image_mobile_url'] ?? $h['image_mobile_url'] ?? $image_url);
+$image_mobile_url = (string) ($h['image_mobile_url'] ?? $image_url);
 ?>
 <section
     id="hero"

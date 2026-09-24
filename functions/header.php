@@ -20,6 +20,8 @@ function avtodealer_header_defaults($lang = null)
         'status'          => 'Мы на связи',
         'hours'           => 'Ежедневно с 09:00 до 21:00',
         'callback_label'  => 'Заказать звонок',
+        'menu_label'      => 'Меню',
+        'loader_text'     => 'Yuklanmoqda…',
         'logo_id'         => 0,
     ];
 

@@ -16,6 +16,7 @@ function avtodealer_modal_defaults($lang = null)
         'button'          => 'Получить предложение',
         'consent'         => 'Согласен на обработку персональных данных.',
         'success'         => 'Заявка принята. Мы перезвоним.',
+        'close_label'     => 'Закрыть',
     ];
 
     $extra = avtodealer_defaults_by_lang('modal', $lang);

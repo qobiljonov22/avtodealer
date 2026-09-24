@@ -73,7 +73,7 @@ if ($title_filter !== '') {
                 data-model-badge="<?php echo esc_attr($car['badge']); ?>"
                 data-model-image="<?php echo esc_url($car['image']); ?>"
                 data-model-credit-url="<?php echo esc_url(avtodealer_href($car['credit_url'])); ?>"
-                data-model-credit-label="<?php echo esc_attr($car['credit_label'] ?: 'Рассчитать кредит'); ?>"
+                data-model-credit-label="<?php echo esc_attr($car['credit_label'] ?? ''); ?>"
                 data-model-gallery="<?php echo esc_attr($gallery_json); ?>"
                 data-model-perks="<?php echo esc_attr($perks_json); ?>">
 

@@ -9,7 +9,7 @@ $icon_orange = 'filter: invert(62%) sepia(68%) saturate(1200%) hue-rotate(339deg
         <?php if ($legal !== '') : ?>
             <details class="group" data-disclaimer open>
                 <summary class="flex cursor-pointer list-none items-center gap-2 text-[14px] font-semibold text-white sm:text-[15px] md:text-[16px] [&::-webkit-details-marker]:hidden">
-                    <span>Дисклеймер</span>
+                    <span><?php echo esc_html($f['disclaimer_title'] ?? ''); ?></span>
                     <svg class="h-3.5 w-3.5 shrink-0 text-white/60 transition group-open:rotate-180 sm:h-4 sm:w-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                         <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -80,8 +80,8 @@ $icon_orange = 'filter: invert(62%) sepia(68%) saturate(1200%) hue-rotate(339deg
         <div class="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 text-[11px] text-white/40 sm:mt-10 sm:flex-row sm:items-center sm:justify-between sm:pt-6 md:mt-12 lg:text-[12px]">
             <p>© <?php echo esc_html(gmdate('Y')); ?>, <?php echo esc_html($f['brand']); ?></p>
             <div class="flex flex-wrap gap-x-5 gap-y-2">
-                <a href="#disclaimer" class="transition-colors hover:text-white" data-open-disclaimer>Правовая информация</a>
-                <a href="#disclaimer" class="transition-colors hover:text-white" data-open-disclaimer>Условия акции</a>
+                <a href="#disclaimer" class="transition-colors hover:text-white" data-open-disclaimer><?php echo esc_html($f['link_legal'] ?? ''); ?></a>
+                <a href="#disclaimer" class="transition-colors hover:text-white" data-open-disclaimer><?php echo esc_html($f['link_promo'] ?? ''); ?></a>
             </div>
         </div>
     </div>

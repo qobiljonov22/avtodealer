@@ -62,7 +62,7 @@ $h = avtodealer_get_header();
                     class="hamburger flex h-9 w-9 items-center justify-center rounded-full bg-white/10 lg:hidden"
                     data-menu-btn
                     aria-expanded="false"
-                    aria-label="Меню">
+                    aria-label="<?php echo esc_attr($h['menu_label'] ?? 'Меню'); ?>">
                     <span class="flex flex-col items-center justify-center gap-[5px]" data-menu-icon>
                         <span class="line1 block h-0.5 w-4 rounded-full bg-white"></span>
                         <span class="line2 block h-0.5 w-4 rounded-full bg-white"></span>
@@ -96,7 +96,7 @@ $h = avtodealer_get_header();
                     </a>
                     <div class="flex items-center gap-2.5 text-[14px] leading-snug text-white/70 sm:text-[15px]">
                         <img src="<?php echo esc_url($theme . '/Font/clock.svg'); ?>" alt="" class="h-4 w-4 shrink-0 opacity-80 brightness-0 invert">
-                        <span><?php echo esc_html(!empty($h['hours']) ? $h['hours'] : 'Ежедневно с 09:00 до 21:00'); ?></span>
+                        <span><?php echo esc_html($h['hours'] ?? ''); ?></span>
                     </div>
                 </div>
 

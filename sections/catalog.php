@@ -12,7 +12,7 @@ if (
 }
 $is_offer = ($catalog_mode === 'offer');
 ?>
-<section id="catalog" class="catalog bg-[#141414] <?php echo $is_offer ? 'py-6 sm:py-7 md:py-8 lg:py-9 xl:py-10 2xl:py-12' : 'py-8 sm:py-10 md:py-12 lg:py-14 xl:py-16 2xl:py-[72px] 3xl:py-20'; ?>" aria-label="Спецпредложение">
+<section id="catalog" class="catalog bg-[#141414] <?php echo $is_offer ? 'py-6 sm:py-7 md:py-8 lg:py-9 xl:py-10 2xl:py-12' : 'py-8 sm:py-10 md:py-12 lg:py-14 xl:py-16 2xl:py-[72px] 3xl:py-20'; ?>" aria-label="<?php echo esc_attr($c['offer_title'] ?? ''); ?>">
     <div class="container mx-auto">
         <div class="flex flex-col items-center gap-5 rounded-2xl border border-white/10 bg-[#1A1A1A] px-4 py-5 sm:gap-6 sm:px-6 sm:py-6 md:gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-5 lg:px-8 lg:py-7 xl:min-h-[130px] xl:gap-6 2xl:px-10 2xl:py-8 3xl:min-h-[150px]">
             <p class="w-full text-center text-[13px] font-bold uppercase leading-tight tracking-wide text-white sm:text-[15px] md:text-[16px] lg:w-auto lg:max-w-[180px] lg:shrink-0 lg:text-left lg:text-[16px] xl:max-w-[220px] xl:text-[18px] 2xl:max-w-[260px] 2xl:text-[20px] 3xl:text-[22px]">
@@ -25,10 +25,10 @@ $is_offer = ($catalog_mode === 'offer');
                 data-countdown-end="<?php echo esc_attr($c['countdown_end']); ?>">
                 <?php
                 $units = [
-                    ['key' => 'days', 'label' => 'дни', 'max' => 7],
-                    ['key' => 'hours', 'label' => 'часа', 'max' => 24],
-                    ['key' => 'minutes', 'label' => 'минут', 'max' => 60],
-                    ['key' => 'seconds', 'label' => 'секунд', 'max' => 60],
+                    ['key' => 'days', 'label' => $c['countdown_days'] ?? '', 'max' => 7],
+                    ['key' => 'hours', 'label' => $c['countdown_hours'] ?? '', 'max' => 24],
+                    ['key' => 'minutes', 'label' => $c['countdown_mins'] ?? '', 'max' => 60],
+                    ['key' => 'seconds', 'label' => $c['countdown_secs'] ?? '', 'max' => 60],
                 ];
                 foreach ($units as $i => $unit) :
                     ?>
@@ -88,28 +88,35 @@ $is_offer = ($catalog_mode === 'offer');
             </div>
 
             <div class="mt-10 flex flex-col items-center sm:mt-12 md:mt-14 lg:mt-16 xl:mt-[72px] 3xl:mt-20">
-                <h2 class="mx-auto max-w-[320px] text-center text-[18px] font-bold uppercase leading-tight text-white sm:max-w-[420px] sm:text-[24px] md:max-w-[640px] md:text-[28px] lg:max-w-[820px] lg:text-[32px] xl:text-[36px] 2xl:max-w-[960px] 2xl:text-[40px] 3xl:text-[44px]">
+                <h2 class="mx-auto max-w-[280px] text-center text-[16px] font-bold uppercase leading-[1.25] tracking-wide text-white sm:max-w-[420px] sm:text-[22px] md:max-w-[560px] md:text-[26px] lg:max-w-[720px] lg:text-[30px] xl:max-w-[820px] xl:text-[34px] 2xl:max-w-[900px] 2xl:text-[38px] 3xl:text-[40px]">
                     <?php echo esc_html($c['promo_title']); ?>
                 </h2>
 
-                <div class="mt-8 grid w-full grid-cols-2 items-end gap-3 sm:mt-10 sm:gap-6 md:mt-12 md:gap-10 lg:mx-auto lg:max-w-[900px] lg:gap-14 xl:max-w-[1000px] 2xl:max-w-[1100px] 2xl:gap-16 3xl:max-w-[1200px]">
-                    <a href="<?php echo esc_url($c['car1_url']); ?>" class="group flex flex-col items-center gap-3 sm:gap-4">
+                <?php /* Figma 1:1 — centered pair: 300 (orange) + label, 500 (champagne) + label */ ?>
+                <div class="mt-8 flex w-full items-end justify-center gap-8 sm:mt-10 sm:gap-12 md:mt-12 md:gap-16 lg:mt-14 lg:gap-[72px] xl:gap-20 2xl:gap-24">
+                    <a href="<?php echo esc_url($c['car1_url']); ?>" class="group flex w-[42%] max-w-[420px] flex-col items-center sm:w-auto sm:max-w-[460px] lg:max-w-[500px]">
                         <img
                             src="<?php echo esc_url($c['car1_image_url']); ?>"
                             alt="<?php echo esc_attr($c['car1_title']); ?>"
-                            class="h-auto w-full max-w-[220px] object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:max-w-[280px] md:max-w-[340px] lg:max-w-[400px] xl:max-w-[440px] 3xl:max-w-[480px]"
-                            width="400"
-                            height="220">
-                        <span class="text-[12px] font-semibold uppercase tracking-wide text-white sm:text-[14px] md:text-[15px] lg:text-[16px] xl:text-[17px] 3xl:text-[18px]"><?php echo esc_html($c['car1_title']); ?></span>
+                            class="h-auto w-full max-w-[380px] object-contain object-bottom drop-shadow-[0_12px_24px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-[1.02] sm:max-w-[420px] lg:max-w-[480px] xl:max-w-[520px]"
+                            width="520"
+                            height="240"
+                            decoding="async">
+                        <span class="mt-2.5 text-center text-[12px] font-semibold uppercase tracking-[0.08em] text-white sm:mt-3 sm:text-[13px] md:text-[14px] lg:mt-3.5 lg:text-[15px] xl:text-[16px]">
+                            <?php echo esc_html($c['car1_title']); ?>
+                        </span>
                     </a>
-                    <a href="<?php echo esc_url($c['car2_url']); ?>" class="group flex flex-col items-center gap-3 sm:gap-4">
+                    <a href="<?php echo esc_url($c['car2_url']); ?>" class="group flex w-[42%] max-w-[420px] flex-col items-center sm:w-auto sm:max-w-[460px] lg:max-w-[500px]">
                         <img
                             src="<?php echo esc_url($c['car2_image_url']); ?>"
                             alt="<?php echo esc_attr($c['car2_title']); ?>"
-                            class="h-auto w-full max-w-[220px] object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:max-w-[280px] md:max-w-[340px] lg:max-w-[400px] xl:max-w-[440px] 3xl:max-w-[480px]"
-                            width="400"
-                            height="220">
-                        <span class="text-[12px] font-semibold uppercase tracking-wide text-white sm:text-[14px] md:text-[15px] lg:text-[16px] xl:text-[17px] 3xl:text-[18px]"><?php echo esc_html($c['car2_title']); ?></span>
+                            class="h-auto w-full max-w-[380px] object-contain object-bottom drop-shadow-[0_12px_24px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-[1.02] sm:max-w-[420px] lg:max-w-[480px] xl:max-w-[520px]"
+                            width="520"
+                            height="240"
+                            decoding="async">
+                        <span class="mt-2.5 text-center text-[12px] font-semibold uppercase tracking-[0.08em] text-white sm:mt-3 sm:text-[13px] md:text-[14px] lg:mt-3.5 lg:text-[15px] xl:text-[16px]">
+                            <?php echo esc_html($c['car2_title']); ?>
+                        </span>
                     </a>
                 </div>
             </div>

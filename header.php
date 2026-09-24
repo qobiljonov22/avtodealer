@@ -63,12 +63,12 @@
 <body <?php body_class('bg-[#141414] text-white'); ?>>
 <?php wp_body_open(); ?>
 <?php
-$avto_loader_brand = 'АВТОРУСЬ TANK';
+$avto_loader_brand = '';
+$avto_loader_text = '';
 if (function_exists('avtodealer_get_header')) {
     $avto_h = avtodealer_get_header();
-    if (!empty($avto_h['brand'])) {
-        $avto_loader_brand = $avto_h['brand'];
-    }
+    $avto_loader_brand = (string) ($avto_h['brand'] ?? '');
+    $avto_loader_text = (string) ($avto_h['loader_text'] ?? '');
 }
 ?>
 <div id="avto-page-loader" role="status" aria-live="polite" aria-busy="true">
@@ -78,7 +78,7 @@ if (function_exists('avtodealer_get_header')) {
             <div class="avto-loader-core">AD</div>
         </div>
         <p class="avto-loader-brand"><?php echo esc_html($avto_loader_brand); ?></p>
-        <p class="avto-loader-sub">Yuklanmoqda…</p>
+        <p class="avto-loader-sub"><?php echo esc_html($avto_loader_text); ?></p>
         <div class="avto-loader-bar" aria-hidden="true"><span></span></div>
     </div>
 </div>
