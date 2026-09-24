@@ -97,25 +97,25 @@ $is_offer = ($catalog_mode === 'offer');
                     <a href="<?php echo esc_url($c['car1_url']); ?>" class="group flex w-[42%] max-w-[420px] flex-col items-center sm:w-auto sm:max-w-[460px] lg:max-w-[500px]">
                         <img
                             src="<?php echo esc_url($c['car1_image_url']); ?>"
-                            alt="<?php echo esc_attr($c['car1_title']); ?>"
+                            alt="<?php echo esc_attr($c['car1_label'] ?? $c['car1_title'] ?? ''); ?>"
                             class="h-auto w-full max-w-[380px] object-contain object-bottom drop-shadow-[0_12px_24px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-[1.02] sm:max-w-[420px] lg:max-w-[480px] xl:max-w-[520px]"
                             width="520"
                             height="240"
                             decoding="async">
                         <span class="mt-2.5 text-center text-[12px] font-semibold uppercase tracking-[0.08em] text-white sm:mt-3 sm:text-[13px] md:text-[14px] lg:mt-3.5 lg:text-[15px] xl:text-[16px]">
-                            <?php echo esc_html($c['car1_title']); ?>
+                            <?php echo esc_html($c['car1_label'] ?? $c['car1_title'] ?? ''); ?>
                         </span>
                     </a>
                     <a href="<?php echo esc_url($c['car2_url']); ?>" class="group flex w-[42%] max-w-[420px] flex-col items-center sm:w-auto sm:max-w-[460px] lg:max-w-[500px]">
                         <img
                             src="<?php echo esc_url($c['car2_image_url']); ?>"
-                            alt="<?php echo esc_attr($c['car2_title']); ?>"
+                            alt="<?php echo esc_attr($c['car2_label'] ?? $c['car2_title'] ?? ''); ?>"
                             class="h-auto w-full max-w-[380px] object-contain object-bottom drop-shadow-[0_12px_24px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-[1.02] sm:max-w-[420px] lg:max-w-[480px] xl:max-w-[520px]"
                             width="520"
                             height="240"
                             decoding="async">
                         <span class="mt-2.5 text-center text-[12px] font-semibold uppercase tracking-[0.08em] text-white sm:mt-3 sm:text-[13px] md:text-[14px] lg:mt-3.5 lg:text-[15px] xl:text-[16px]">
-                            <?php echo esc_html($c['car2_title']); ?>
+                            <?php echo esc_html($c['car2_label'] ?? $c['car2_title'] ?? ''); ?>
                         </span>
                     </a>
                 </div>

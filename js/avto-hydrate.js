@@ -165,12 +165,16 @@
       });
     }
 
-    if (cat.car1_title || cat.car2_title) {
+    if (cat.car1_title || cat.car2_title || cat.car1_label || cat.car2_label) {
       qsa('#catalog a span, #catalog a').forEach(function (el) {
         if (el.children.length) return;
         var t = el.textContent.trim();
-        if (t === 'TANK 300' && cat.car1_title) text(el, cat.car1_title);
-        if (t === 'TANK 500' && cat.car2_title) text(el, cat.car2_title);
+        if (t === 'TANK 300' && (cat.car1_label || cat.car1_title)) {
+          text(el, cat.car1_label || cat.car1_title);
+        }
+        if (t === 'TANK 500' && (cat.car2_label || cat.car2_title)) {
+          text(el, cat.car2_label || cat.car2_title);
+        }
       });
     }
 

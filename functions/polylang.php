@@ -110,39 +110,70 @@ function avtodealer_lang_meta($lang = null)
 
 function avtodealer_language_switcher()
 {
-    if (!function_exists('pll_the_languages')) {
-        return '';
+    // Bitta ko‘rinadigan control: faqat 🇷🇺 RU (boshqa bayroqlar yo‘q).
+    $ru_url = trailingslashit(home_url('/'));
+
+    if (function_exists('pll_home_url')) {
+        $pll = pll_home_url('ru');
+        if (is_string($pll) && $pll !== '') {
+            $ru_url = $pll;
+        }
+    } else {
+        $ru_url = add_query_arg('lang', 'ru', $ru_url);
     }
 
-    $langs = pll_the_languages([
-        'raw'                   => 1,
-        'hide_if_empty'         => 0,
-        'hide_current'          => 0,
-        'display_names_as'      => 'slug',
-        'show_flags'            => 0,
-        'hide_if_no_translation'=> 0,
-    ]);
-
-    if (!is_array($langs) || !$langs) {
-        return '';
-    }
-
-    $html = '<nav class="avto-lang flex items-center gap-2 text-[12px] uppercase tracking-wide" aria-label="Language">';
-
-    foreach ($langs as $item) {
-        $slug = strtoupper((string) ($item['slug'] ?? ''));
-        $url = (string) ($item['url'] ?? '#');
-        $current = !empty($item['current_lang']);
-        $class = $current
-            ? 'font-bold text-[#FF6A00]'
-            : 'text-white/60 transition-colors hover:text-white';
-        $html .= '<a class="' . esc_attr($class) . '" href="' . esc_url($url) . '" hreflang="' . esc_attr($item['slug'] ?? '') . '" lang="' . esc_attr($item['slug'] ?? '') . '">' . esc_html($slug) . '</a>';
-    }
-
-    $html .= '</nav>';
-
-    return $html;
+    ob_start();
+    ?>
+    <div class="avto-lang relative shrink-0" data-lang-switcher>
+        <a
+            href="<?php echo esc_url($ru_url); ?>"
+            class="avto-lang-ru inline-flex h-8 items-center gap-1.5 rounded border border-white/20 bg-[#1a1a1a] px-2.5 text-[12px] font-semibold tracking-wide text-white no-underline hover:border-[#FF9549]"
+            data-lang-ru
+            aria-label="Русский"
+            title="Русский">
+            <span class="text-[14px] leading-none" aria-hidden="true">🇷🇺</span>
+            <span>RU</span>
+        </a>
+    </div>
+    <?php
+    return (string) ob_get_clean();
 }
+
+/**
+ * Polylang default flag switcherlarini yashirish — faqat bitta RU select.
+ */
+function avtodealer_hide_polylang_default_switcher()
+{
+    ?>
+    <style id="avto-hide-pll-flags">
+      /* Polylang / boshqa til switcherlarini to‘liq yashirish — faqat .avto-lang-ru */
+      body:not(.wp-admin) .widget_polylang,
+      body:not(.wp-admin) .pll-switcher,
+      body:not(.wp-admin) .pll-switcher-flags,
+      body:not(.wp-admin) ul.pll-container,
+      body:not(.wp-admin) .menu-item-type-pll_lang_switcher,
+      body:not(.wp-admin) nav.languages,
+      body:not(.wp-admin) ul.language-switcher,
+      body:not(.wp-admin) .lang-item,
+      body:not(.wp-admin) .lang-item img.pll-flag,
+      body:not(.wp-admin) #wpadminbar li[id*="languages"],
+      body:not(.wp-admin) #wpadminbar .pll-flag {
+        display: none !important;
+      }
+    </style>
+    <?php
+}
+add_action('wp_head', 'avtodealer_hide_polylang_default_switcher', 5);
+
+function avtodealer_remove_pll_admin_bar_flags($wp_admin_bar)
+{
+    if (!is_object($wp_admin_bar)) {
+        return;
+    }
+    $wp_admin_bar->remove_node('languages');
+    $wp_admin_bar->remove_node('wp-admin-bar-languages');
+}
+add_action('admin_bar_menu', 'avtodealer_remove_pll_admin_bar_flags', 999);
 
 function avtodealer_defaults_by_lang($resource, $lang = null)
 {

@@ -16,7 +16,7 @@ function avtodealer_admin_menu()
     }
 
     add_menu_page(
-        'Avtodealer Studio',
+        'Avtodealer',
         'Avtodealer',
         'manage_options',
         'avtodealer-cms',
@@ -35,9 +35,9 @@ function avtodealer_admin_bar_link($wp_admin_bar)
 
     $wp_admin_bar->add_node([
         'id'    => 'avtodealer-studio',
-        'title' => 'Avtodealer Studio',
+        'title' => 'Avtodealer',
         'href'  => admin_url('admin.php?page=avtodealer-cms'),
-        'meta'  => ['title' => 'Avtodealer kontent pulti'],
+        'meta'  => ['title' => 'Avtodealer kontent'],
     ]);
 }
 add_action('admin_bar_menu', 'avtodealer_admin_bar_link', 80);
@@ -52,8 +52,8 @@ function avtodealer_admin_dashboard_notice()
         return;
     }
     $url = esc_url(admin_url('admin.php?page=avtodealer-cms'));
-    echo '<div class="notice notice-info"><p><strong>Avtodealer Studio</strong> — kontent CRUD pulti: ';
-    echo '<a href="' . $url . '">ochish</a> · chap menyuda <strong>Avtodealer</strong> yoki yuqorida admin bar.</p></div>';
+    echo '<div class="notice notice-info"><p><strong>Avtodealer</strong> — ';
+    echo '<a href="' . $url . '">kontentni tahrirlash</a>.</p></div>';
 }
 add_action('admin_notices', 'avtodealer_admin_dashboard_notice');
 
@@ -93,6 +93,7 @@ function avtodealer_admin_assets($hook)
         'languages' => function_exists('avtodealer_languages') ? avtodealer_languages() : ['ru', 'uz', 'en'],
         'resources' => array_keys(avtodealer_rest_resources()),
         'adminUrl'  => admin_url('admin.php?page=avtodealer-cms'),
+        'userName'  => wp_get_current_user()->display_name ?: 'admin',
     ]);
 }
 add_action('admin_enqueue_scripts', 'avtodealer_admin_assets');
@@ -100,30 +101,18 @@ add_action('admin_enqueue_scripts', 'avtodealer_admin_assets');
 function avtodealer_admin_tailwind_theme()
 {
     $screen = function_exists('get_current_screen') ? get_current_screen() : null;
-    if (!$screen) {
-        return;
-    }
-    $ok = ($screen->id === 'toplevel_page_avtodealer-cms');
-    if (!$ok) {
+    if (!$screen || $screen->id !== 'toplevel_page_avtodealer-cms') {
         return;
     }
     ?>
     <style type="text/tailwindcss">
       @theme {
-        --color-avto-bg: #0c0f12;
-        --color-avto-panel: #14191f;
-        --color-avto-line: rgba(255, 255, 255, 0.08);
-        --color-avto-muted: #8b95a5;
-        --color-avto-accent: #ff6a00;
-        --color-avto-accent-2: #ff9549;
-        --color-avto-ok: #3ddc84;
-        --color-avto-danger: #ff5c5c;
-        --color-avto-info: #5cb8ff;
-        --color-avto-warn: #f5c542;
-      }
-      @keyframes avtoIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
+        --color-wp-blue: #2271b1;
+        --color-wp-blue-dark: #135e96;
+        --color-wp-border: #c3c4c7;
+        --color-wp-muted: #646970;
+        --color-wp-bg: #f0f0f1;
+        --color-wp-trash: #b32d2e;
       }
     </style>
     <?php
@@ -136,33 +125,10 @@ function avtodealer_admin_render()
         wp_die('Ruxsat yo‘q.');
     }
     ?>
-    <div id="avto-cms-root" class="wrap !m-0 !mb-10 !max-w-none !ml-[-12px] font-sans text-[#f3f4f6]">
-        <div class="overflow-hidden rounded-[22px] border border-white/10 bg-[radial-gradient(1200px_500px_at_10%_-10%,rgba(255,106,0,0.16),transparent_55%),radial-gradient(900px_400px_at_90%_0%,rgba(92,184,255,0.08),transparent_50%),linear-gradient(180deg,#10151a_0%,#0c0f12_40%)] shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-black/25 px-6 py-5">
-                <div class="flex items-center gap-3.5">
-                    <div class="grid h-[46px] w-[46px] place-items-center rounded-[14px] bg-gradient-to-br from-[#ff6a00] to-[#ff9549] text-base font-extrabold tracking-wide text-[#111] shadow-[0_10px_30px_rgba(255,106,0,0.35)]" aria-hidden="true">AD</div>
-                    <div>
-                        <h1 class="!m-0 !p-0 text-[22px] font-bold tracking-tight text-white">Avtodealer Studio</h1>
-                        <p class="m-0 mt-1 text-[13px] text-[#8b95a5]">Header → Models → Footer · GET / POST / PUT / DELETE · Leads</p>
-                    </div>
-                </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <a href="<?php echo esc_url(home_url('/')); ?>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-semibold text-white no-underline transition hover:border-[#ff9549]/50 hover:text-[#ff9549]">
-                        Saytni ochish ↗
-                    </a>
-                    <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 font-mono text-xs text-[#8b95a5]">
-                        <strong class="font-bold text-[#ff9549]">API</strong>
-                        <span>/avtodealer/v1</span>
-                    </div>
-                </div>
-            </div>
-            <div class="p-[18px] pb-6">
-                <div id="avto-cms-panel">
-                    <div class="px-5 py-12 text-center text-[#8b95a5]">Studio yuklanmoqda…</div>
-                </div>
-            </div>
+    <div id="avto-cms-root" class="wrap !max-w-[1200px] font-sans text-[13px] text-[#1d2327]">
+        <div id="avto-cms-app">
+            <p class="text-[#646970]">Yuklanmoqda…</p>
         </div>
-        <div id="avto-cms-toast" class="pointer-events-none fixed bottom-6 right-6 z-[100000] min-w-[240px] max-w-[360px] translate-y-5 rounded-[14px] border border-white/10 bg-[#151b22] px-4 py-3.5 text-white opacity-0 shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition duration-250" role="status" aria-live="polite"></div>
     </div>
     <?php
 }

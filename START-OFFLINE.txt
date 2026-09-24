@@ -4,15 +4,15 @@ SAYТ + ADMIN (server o‘chiq / OpenServer o‘chiq)
 -----------------------------------------------
 1) Loyiha papkasida:
      .\serve-static.ps1
-2) Brauzer:
+2) Brauzer (TO‘G‘RI manzillar — "sizning-domen" yozilmaydi):
      Sayt:  http://127.0.0.1:8080/
-     Admin: http://127.0.0.1:8080/admin/
+     Admin: http://127.0.0.1:8080/admin.html
 3) Admin → Saqlash → saytni yangilang (F5)
    Ma’lumot shu brauzerda localStorage da qoladi.
 
-Vercel:
-  Sayt:  https://SIZNING.vercel.app/
-  Admin: https://SIZNING.vercel.app/admin/
+Vercel (online):
+  Sayt:  https://avtodealer.vercel.app/
+  Admin: https://avtodealer.vercel.app/admin/
 
 OpenServer YOQILGANDA (WordPress):
   Sayt:  http://avtodealer.local/

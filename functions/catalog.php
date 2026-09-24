@@ -25,9 +25,11 @@ function avtodealer_catalog_defaults($lang = null)
         'feature3_text'   => 'Широкий выбор комплектаций, с полным пакетом документов.',
         'promo_title'     => 'Забронируйте автомобиль сегодня и получите дополнительную выгоду 100 000 ₽',
         'car1_title'      => 'TANK 300',
+        'car1_label'      => 'TANK 300',
         'car1_url'        => '/tank-300/',
         'car1_image_id'   => 0,
         'car2_title'      => 'TANK 500',
+        'car2_label'      => 'TANK 500',
         'car2_url'        => '/tank-500/',
         'car2_image_id'   => 0,
         // Figma: orange 300 left, champagne 500 right
@@ -168,6 +170,12 @@ function avtodealer_get_catalog($lang = null)
     $data['car2_image_id'] = $car2_id;
     $data['car1_image_url'] = $car1_url;
     $data['car2_image_url'] = $car2_url;
+    if (trim((string) ($data['car1_label'] ?? '')) === '') {
+        $data['car1_label'] = (string) ($data['car1_title'] ?? '');
+    }
+    if (trim((string) ($data['car2_label'] ?? '')) === '') {
+        $data['car2_label'] = (string) ($data['car2_title'] ?? '');
+    }
     $data['countdown_end'] = $end;
     $data['offer_cta_url'] = avtodealer_href($data['offer_cta_url'] ?? '', '#credit');
     $data['car1_url'] = avtodealer_catalog_car_href(

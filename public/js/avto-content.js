@@ -48,7 +48,9 @@
       feature3_text: 'Широкий выбор комплектаций, с полным пакетом документов.',
       promo_title: 'Забронируйте автомобиль сегодня и получите дополнительную выгоду 100 000 ₽',
       car1_title: 'TANK 300',
+      car1_label: 'TANK 300',
       car2_title: 'TANK 500',
+      car2_label: 'TANK 500',
     },
     footer: {
       disclaimer_title: 'Дисклеймер',

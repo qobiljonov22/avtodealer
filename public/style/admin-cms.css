@@ -1,0 +1,115 @@
+/* Avtodealer CMS — classic WP admin look (Ramazon Taqvim style) */
+.avto-cms-wrap .avto-filter-box {
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 12px 14px;
+  margin: 12px 0 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: flex-end;
+}
+.avto-cms-wrap .avto-filter-box label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.avto-cms-wrap .avto-filter-box .avto-filter-field {
+  min-width: 140px;
+}
+.avto-cms-wrap .avto-filter-box .avto-filter-spacer {
+  flex: 1;
+}
+.avto-cms-wrap .avto-filter-box .button-primary {
+  height: 30px;
+  line-height: 28px;
+}
+.avto-cms-wrap .wp-list-table .column-id {
+  width: 56px;
+}
+.avto-cms-wrap .wp-list-table .column-actions {
+  width: 140px;
+}
+.avto-cms-wrap .avto-edit-card {
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  margin: 12px 0 20px;
+}
+.avto-cms-wrap .avto-edit-card h2 {
+  margin: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid #c3c4c7;
+  font-size: 14px;
+  background: #f6f7f7;
+}
+.avto-cms-wrap .avto-edit-card .inside {
+  padding: 8px 16px 16px;
+}
+.avto-cms-wrap .avto-edit-actions {
+  padding: 12px 16px;
+  border-top: 1px solid #c3c4c7;
+  background: #f6f7f7;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.avto-cms-wrap .form-table th {
+  width: 200px;
+  padding-left: 0;
+}
+.avto-cms-wrap .avto-media-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+}
+.avto-cms-wrap .avto-media-card {
+  border: 1px solid #c3c4c7;
+  padding: 10px;
+  background: #fff;
+  max-width: 280px;
+}
+.avto-cms-wrap .avto-media-card img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 8px;
+  background: #f0f0f1;
+}
+.avto-cms-wrap .avto-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100000;
+  background: #1d2327;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.avto-cms-wrap .avto-toast.is-error {
+  background: #d63638;
+}
+.avto-cms-wrap .avto-toast.is-ok {
+  background: #00a32a;
+}
+.avto-cms-wrap .row-actions {
+  color: #c3c4c7;
+}
+.avto-cms-wrap .row-actions a {
+  text-decoration: none;
+}
+.avto-cms-wrap .row-actions .delete a {
+  color: #b32d2e;
+}
+.avto-cms-wrap textarea.large-text {
+  width: 100%;
+  max-width: 640px;
+}
+.avto-cms-wrap input.regular-text,
+.avto-cms-wrap select {
+  max-width: 100%;
+}

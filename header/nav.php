@@ -18,7 +18,6 @@ $h = avtodealer_get_header();
                     <img src="<?php echo esc_url($theme . '/Font/speed.svg'); ?>" alt="" class="h-3.5 w-3.5 shrink-0 xl:h-4 xl:w-4 3xl:h-[18px] 3xl:w-[18px] 4xl:h-5 4xl:w-5">
                     <?php echo esc_html($h['testdrive_label']); ?>
                 </a>
-                <?php echo avtodealer_language_switcher(); ?>
             </nav>
         </div>
 
@@ -53,9 +52,7 @@ $h = avtodealer_get_header();
                     <span class="hidden sm:inline"><?php echo esc_html($h['callback_label']); ?></span>
                 </button>
 
-                <div class="lg:hidden">
-                    <?php echo avtodealer_language_switcher(); ?>
-                </div>
+                <?php echo avtodealer_language_switcher(); ?>
 
                 <button
                     type="button"

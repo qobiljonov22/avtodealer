@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     initPageLoader();
     initMobileMenu();
+    initLangSwitcher();
     initCountdown();
     initConfigsMore();
     initCreditForm();
@@ -43,6 +44,10 @@ function initPageLoader() {
         window.addEventListener('load', hide);
         setTimeout(hide, 8000);
     }
+}
+
+function initLangSwitcher() {
+    // Front: faqat bitta 🇷🇺 RU link — select yo‘q.
 }
 
 function initMobileMenu() {
