@@ -1,0 +1,28 @@
+Avtodealer — serverda wp-admin (localdagidek)
+
+MUAMMO
+------
+Vercel / Netlify = faqat HTML. PHP yo‘q.
+Shuning uchun https://...vercel.app/wp-admin → 403 yoki ishlamaydi.
+Local OpenServerda ishlashi normal.
+
+YECHIM
+------
+Asosiy saytni PHP + MySQL hostingga qo‘ying (Beget, Hostinger, Timeweb, …).
+
+1) Desktop: avtodealer-FULL-WordPress-PHP.zip
+2) wordpress/ papkasini hostingga yuklang (public_html yoki www)
+3) MySQL baza yarating, wp-config.php da DB_NAME / DB_USER / DB_PASSWORD
+4) Brauzerda domenni oching → WordPress o‘rnatish
+5) Tema: Avtodealer (allaqachon themes ichida bo‘lishi kerak)
+6) wp-config.php da "That's all, stop editing!" DAN OLDIN:
+     require_once __DIR__ . '/wp-content/themes/avtodealer/hosting-wp-config.php';
+7) Admin: https://SIZNING-DOMEN/wp-admin
+   Studio: Avtodealer menyusi
+
+Natija:
+  Local  → http://avtodealer.local/wp-admin
+  Server → https://SIZNING-DOMEN/wp-admin
+
+Vercel faqat preview uchun qoladi — u yerda admin bo‘lmaydi.
+Previewda tushuntirish: /admin/

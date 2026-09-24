@@ -28,8 +28,9 @@
     }
   ],
   "redirects": [
-    { "source": "/wp-admin", "destination": "/wp-admin-notice/", "permanent": false },
-    { "source": "/wp-admin/:path*", "destination": "/wp-admin-notice/", "permanent": false },
-    { "source": "/wp-login.php", "destination": "/wp-admin-notice/", "permanent": false }
+    { "source": "/cms", "destination": "/admin/", "permanent": false },
+    { "source": "/cms/", "destination": "/admin/", "permanent": false },
+    { "source": "/wp-admin-notice", "destination": "/admin/", "permanent": false },
+    { "source": "/wp-admin-notice/", "destination": "/admin/", "permanent": false }
   ]
 }

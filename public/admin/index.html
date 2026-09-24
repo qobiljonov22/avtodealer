@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Avtodealer</title>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui,sans-serif;background:#0c0f12;color:#f3f4f6}
+    main{max-width:640px;padding:2rem}
+    h1{color:#ff9549;font-size:1.4rem;margin:0 0 .75rem}
+    p{line-height:1.55;color:#c7d0dc;margin:0 0 .85rem}
+    code{background:#1a222b;padding:.12rem .4rem;border-radius:6px;color:#fff;font-size:.92em}
+    a{color:#ff9549}
+    .box{margin:1.1rem 0;padding:1rem 1.1rem;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.03)}
+    .ok{border-color:rgba(61,220,132,.35)}
+    .bad{border-color:rgba(255,100,80,.35)}
+    ol{margin:.4rem 0 0;padding-left:1.2rem;color:#c7d0dc;line-height:1.55}
+    li{margin:.35rem 0}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>WordPress Admin</h1>
+    <p>Sayt matnlari <strong>WordPress</strong> orqali boshqariladi. Admin ochilishi uchun <strong>PHP + MySQL</strong> kerak.</p>
+
+    <div class="box ok">
+      <p><strong>Local (ishlaydi)</strong></p>
+      <p>OpenServer yoqilgan bo‘lsin → oching:</p>
+      <p><code>http://avtodealer.local/wp-admin</code></p>
+      <p>Avtodealer Studio: chap menyu → <strong>Avtodealer</strong></p>
+    </div>
+
+    <div class="box bad">
+      <p><strong>Vercel (bu domen)</strong></p>
+      <p>Bu yerda faqat <em>statik preview</em>. PHP yo‘q → <code>/wp-admin</code> ochilmaydi.</p>
+      <p>Vercel xavfsizlik qoidasi <code>/wp-admin</code> ni <strong>403 Forbidden</strong> qilib bloklaydi — bu tema xatosi emas.</p>
+    </div>
+
+    <div class="box">
+      <p><strong>Serverda ham admin kerak bo‘lsa</strong></p>
+      <ol>
+        <li>Desktopdagi <code>avtodealer-FULL-WordPress-PHP.zip</code> ni oching</li>
+        <li>Beget / Hostinger / Timeweb (PHP + MySQL) ga <code>wordpress/</code> ni yuklang</li>
+        <li>O‘rnatishdan keyin: <code>https://SIZNING-DOMEN/wp-admin</code></li>
+        <li><code>wp-config.php</code> ichida <code>That's all, stop editing!</code> dan oldin:<br>
+          <code>require_once __DIR__ . '/wp-content/themes/avtodealer/hosting-wp-config.php';</code>
+        </li>
+      </ol>
+      <p>Shu PHP domen — asosiy sayt + admin. Vercel faqat ko‘rib chiqish uchun qolishi mumkin.</p>
+    </div>
+
+    <p><a href="/">← Saytga qaytish</a></p>
+  </main>
+</body>
+</html>
