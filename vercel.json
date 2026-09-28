@@ -31,9 +31,15 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/admin/", "destination": "/admin.html" },
     { "source": "/cms", "destination": "/admin.html" },
-    { "source": "/cms/", "destination": "/admin.html" }
+    { "source": "/cms/", "destination": "/admin.html" },
+    { "source": "/studio", "destination": "/admin.html" },
+    { "source": "/studio/", "destination": "/admin.html" }
   ],
   "redirects": [
+    { "source": "/wp-admin", "destination": "/admin/", "permanent": false },
+    { "source": "/wp-admin/", "destination": "/admin/", "permanent": false },
+    { "source": "/wp-admin/(.*)", "destination": "/admin/", "permanent": false },
+    { "source": "/wp-login.php", "destination": "/admin/", "permanent": false },
     { "source": "/wp-admin-notice", "destination": "/admin/", "permanent": false },
     { "source": "/wp-admin-notice/", "destination": "/admin/", "permanent": false }
   ]
