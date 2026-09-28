@@ -280,7 +280,7 @@
     applyDataCms(data);
     applyModels(data);
 
-    // Trade-in / Credit / Corporate rasmlar
+ 
     var trade = data.tradein || {};
     if (trade.image_url) {
       var tImg = qs('#tradein img, [data-tradein-image], section[aria-label*="Trade"] img');
