@@ -179,6 +179,34 @@ function avtodealer_rest_register_resource($slug)
     ]);
 }
 
+/**
+ * Barcha front kontent (text + img) — bitta bundle.
+ * Static sahifalar / hydrate shu endpointdan o‘qiydi.
+ */
+function avtodealer_rest_content(WP_REST_Request $request)
+{
+    $lang = avtodealer_current_lang($request);
+    $map = avtodealer_rest_resources();
+    $out = [
+        'lang' => $lang,
+        'i18n' => avtodealer_lang_meta($lang),
+    ];
+
+    foreach ($map as $slug => $handlers) {
+        if (empty($handlers['get']) || !function_exists($handlers['get'])) {
+            continue;
+        }
+        $data = call_user_func($handlers['get'], $lang);
+        if (!is_array($data)) {
+            continue;
+        }
+        unset($data['crud'], $data['i18n']);
+        $out[$slug] = $data;
+    }
+
+    return rest_ensure_response($out);
+}
+
 function avtodealer_register_rest()
 {
     register_rest_route('avtodealer/v1', '/schema', [
@@ -192,6 +220,18 @@ function avtodealer_register_rest()
         'methods'             => WP_REST_Server::READABLE,
         'callback'            => 'avtodealer_rest_index',
         'permission_callback' => '__return_true',
+    ]);
+
+    register_rest_route('avtodealer/v1', '/content', [
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'avtodealer_rest_content',
+        'permission_callback' => '__return_true',
+        'args'                => [
+            'lang' => [
+                'type'     => 'string',
+                'required' => false,
+            ],
+        ],
     ]);
 
     foreach (array_keys(avtodealer_rest_resources()) as $slug) {

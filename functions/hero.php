@@ -16,7 +16,6 @@ function avtodealer_hero_defaults($lang = null)
         'cta_url'         => '#credit',
         'image_id'        => 0,
         'image_mobile_id' => 0,
-        // Home (asosiy) hero — Figma 1-page (garage / image 285). Tank pages use separate getters.
         'image_default'   => $theme . '/images/' . rawurlencode('image 285.png'),
         'image_mobile_default' => $theme . '/images/' . rawurlencode('image 285 mobile.png'),
     ];

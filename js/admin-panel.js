@@ -573,6 +573,46 @@
         mediaRow('Car 2', d.car2_image_url, 'pick-c2', 'img-c2')
       );
     }
+    if (activeTab === 'models') {
+      function carFields(prefix, label) {
+        return (
+          group(
+            label,
+            field(prefix + '_eyebrow', 'Eyebrow', d[prefix + '_eyebrow']) +
+              field(prefix + '_title', 'Title', d[prefix + '_title']) +
+              field(prefix + '_benefit', 'Benefit', d[prefix + '_benefit'], { wide: true }) +
+              field(prefix + '_badge', 'Badge', d[prefix + '_badge'], { wide: true }) +
+              field(prefix + '_cta_label', 'CTA', d[prefix + '_cta_label']) +
+              field(prefix + '_cta_url', 'CTA URL', d[prefix + '_cta_url']) +
+              field(prefix + '_td_label', 'Test-drive', d[prefix + '_td_label']) +
+              field(prefix + '_td_url', 'TD URL', d[prefix + '_td_url']) +
+              field(prefix + '_credit_label', 'Credit', d[prefix + '_credit_label']) +
+              field(prefix + '_credit_url', 'Credit URL', d[prefix + '_credit_url']) +
+              field(prefix + '_colors', 'Ranglar (#HEX|url har qator)', d[prefix + '_colors'], {
+                wide: true,
+                type: 'textarea',
+              }) +
+              field(prefix + '_perks', 'Perks (har qator)', d[prefix + '_perks'], {
+                wide: true,
+                type: 'textarea',
+              }) +
+              field(prefix + '_image_id', 'Asosiy rasm ID', d[prefix + '_image_id'], { type: 'number' }) +
+              field(prefix + '_g1_id', 'Gallery 1 ID', d[prefix + '_g1_id'], { type: 'number' }) +
+              field(prefix + '_g2_id', 'Gallery 2 ID', d[prefix + '_g2_id'], { type: 'number' }) +
+              field(prefix + '_g3_id', 'Gallery 3 ID', d[prefix + '_g3_id'], { type: 'number' }) +
+              field(prefix + '_g4_id', 'Gallery 4 ID', d[prefix + '_g4_id'], { type: 'number' }) +
+              field(prefix + '_g5_id', 'Gallery 5 ID', d[prefix + '_g5_id'], { type: 'number' })
+          ) +
+          mediaRow(label + ' asosiy', d[prefix + '_image_url'], 'pick-' + prefix, 'img-' + prefix) +
+          mediaRow(label + ' g1', d[prefix + '_g1_url'], 'pick-' + prefix + '-g1', 'img-' + prefix + '-g1') +
+          mediaRow(label + ' g2', d[prefix + '_g2_url'], 'pick-' + prefix + '-g2', 'img-' + prefix + '-g2') +
+          mediaRow(label + ' g3', d[prefix + '_g3_url'], 'pick-' + prefix + '-g3', 'img-' + prefix + '-g3') +
+          mediaRow(label + ' g4', d[prefix + '_g4_url'], 'pick-' + prefix + '-g4', 'img-' + prefix + '-g4') +
+          mediaRow(label + ' g5', d[prefix + '_g5_url'], 'pick-' + prefix + '-g5', 'img-' + prefix + '-g5')
+        );
+      }
+      return carFields('car1', 'TANK 300') + carFields('car2', 'TANK 500');
+    }
     if (activeTab === 'footer') {
       return group(
         'Footer',
@@ -701,6 +741,7 @@
         busy = true;
         update.disabled = true;
         try {
+          loading = true;
           currentData = await api(activeTab, 'PUT', formData(f));
           dirty = false;
           notice('Updated · ' + activeLang.toUpperCase());
@@ -749,6 +790,18 @@
       ['pick-hero-m', 'image_mobile_id', 'img-hero-m'],
       ['pick-c1', 'car1_image_id', 'img-c1'],
       ['pick-c2', 'car2_image_id', 'img-c2'],
+      ['pick-car1', 'car1_image_id', 'img-car1'],
+      ['pick-car1-g1', 'car1_g1_id', 'img-car1-g1'],
+      ['pick-car1-g2', 'car1_g2_id', 'img-car1-g2'],
+      ['pick-car1-g3', 'car1_g3_id', 'img-car1-g3'],
+      ['pick-car1-g4', 'car1_g4_id', 'img-car1-g4'],
+      ['pick-car1-g5', 'car1_g5_id', 'img-car1-g5'],
+      ['pick-car2', 'car2_image_id', 'img-car2'],
+      ['pick-car2-g1', 'car2_g1_id', 'img-car2-g1'],
+      ['pick-car2-g2', 'car2_g2_id', 'img-car2-g2'],
+      ['pick-car2-g3', 'car2_g3_id', 'img-car2-g3'],
+      ['pick-car2-g4', 'car2_g4_id', 'img-car2-g4'],
+      ['pick-car2-g5', 'car2_g5_id', 'img-car2-g5'],
     ];
     picks.forEach(function (row) {
       var el = document.getElementById(row[0]);

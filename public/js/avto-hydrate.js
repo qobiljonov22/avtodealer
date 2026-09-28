@@ -1,5 +1,6 @@
 /**
  * Apply AvtoContent to static pages — OpenServer / PHP shart emas.
+ * Matn + rasmlar WordPress /content (yoki localStorage) dan keladi.
  */
 (function () {
   'use strict';
@@ -18,6 +19,36 @@
     el.textContent = String(value);
   }
 
+  function setImg(el, url, alt) {
+    if (!el || !url) return;
+    el.setAttribute('src', publicImg(url));
+    if (alt) el.setAttribute('alt', String(alt));
+  }
+
+  /** WP tema URL → static /images/... (Vercel / lokal static) */
+  function publicImg(url) {
+    if (!url) return '';
+    var s = String(url);
+    try {
+      var u = new URL(s, window.location.origin);
+      var m = u.pathname.match(/\/images\/(.+)$/i);
+      if (m) {
+        return (
+          '/images/' +
+          m[1]
+            .split('/')
+            .map(function (p) {
+              return encodeURIComponent(decodeURIComponent(p));
+            })
+            .join('/')
+        );
+      }
+      return s;
+    } catch (e) {
+      return s;
+    }
+  }
+
   function replaceExact(selector, from, to) {
     if (!to) return;
     qsa(selector).forEach(function (el) {
@@ -34,8 +65,208 @@
       if (val === '' || val == null) return;
       var attr = el.getAttribute('data-cms-attr');
       if (attr === 'html') el.innerHTML = String(val);
+      else if (attr === 'src') el.setAttribute('src', publicImg(val));
       else if (attr) el.setAttribute(attr, String(val));
       else el.textContent = String(val);
+    });
+  }
+
+  function parseLines(raw) {
+    return String(raw || '')
+      .split(/\r?\n/)
+      .map(function (l) {
+        return l.trim();
+      })
+      .filter(Boolean);
+  }
+
+  function parseColors(raw, fallbackImg) {
+    return parseLines(raw).map(function (line) {
+      var hex = line;
+      var img = '';
+      if (line.indexOf('|') !== -1) {
+        var parts = line.split('|');
+        hex = (parts[0] || '').trim();
+        img = (parts[1] || '').trim();
+      }
+      if (hex && hex.charAt(0) !== '#') hex = '#' + hex;
+      return { hex: hex, image: publicImg(img || fallbackImg || '') };
+    });
+  }
+
+  function carsFromModels(m) {
+    if (!m) return [];
+    if (Array.isArray(m.cars) && m.cars.length) {
+      return m.cars.map(function (c) {
+        return {
+          id: c.id || '',
+          anchor: c.anchor || '',
+          eyebrow: c.eyebrow || '',
+          title: c.title || '',
+          benefit: c.benefit || '',
+          badge: c.badge || '',
+          cta_label: c.cta_label || '',
+          cta_url: c.cta_url || '',
+          td_label: c.td_label || '',
+          td_url: c.td_url || '',
+          credit_label: c.credit_label || '',
+          credit_url: c.credit_url || '',
+          image: publicImg(c.image || c.image_url || ''),
+          gallery: (c.gallery || []).map(publicImg).filter(Boolean),
+          colors: Array.isArray(c.colors)
+            ? c.colors.map(function (col) {
+                return {
+                  hex: col.hex || col,
+                  image: publicImg((col && col.image) || c.image || ''),
+                };
+              })
+            : [],
+          perks: Array.isArray(c.perks) ? c.perks : parseLines(c.perks),
+        };
+      });
+    }
+    return ['car1', 'car2'].map(function (key) {
+      var image = publicImg(m[key + '_image_url'] || '');
+      var gallery = ['g1', 'g2', 'g3', 'g4', 'g5']
+        .map(function (g) {
+          return publicImg(m[key + '_' + g + '_url'] || '');
+        })
+        .filter(Boolean);
+      return {
+        id: key,
+        anchor: key === 'car1' ? 'tank-300' : 'tank-500',
+        eyebrow: m[key + '_eyebrow'] || '',
+        title: m[key + '_title'] || '',
+        benefit: m[key + '_benefit'] || '',
+        badge: m[key + '_badge'] || '',
+        cta_label: m[key + '_cta_label'] || '',
+        cta_url: m[key + '_cta_url'] || '',
+        td_label: m[key + '_td_label'] || '',
+        td_url: m[key + '_td_url'] || '',
+        credit_label: m[key + '_credit_label'] || '',
+        credit_url: m[key + '_credit_url'] || '',
+        image: image,
+        gallery: gallery,
+        colors: parseColors(m[key + '_colors'], image),
+        perks: parseLines(m[key + '_perks']),
+      };
+    });
+  }
+
+  function matchCar(cars, card) {
+    var title = (card.getAttribute('data-model-title') || '').toLowerCase();
+    var id = (card.id || '').toLowerCase();
+    var found = cars.filter(function (c) {
+      var t = (c.title || '').toLowerCase();
+      var a = (c.anchor || '').toLowerCase();
+      var cid = (c.id || '').toLowerCase();
+      if (id && (id === a || id.indexOf(a) !== -1)) return true;
+      if (title && t && (t === title || t.indexOf(title) !== -1 || title.indexOf(t) !== -1)) return true;
+      if (cid && id.indexOf(cid) !== -1) return true;
+      return false;
+    })[0];
+    return found || null;
+  }
+
+  function applyModelCard(card, car) {
+    if (!card || !car) return;
+
+    if (car.title) card.setAttribute('data-model-title', car.title);
+    if (car.badge) card.setAttribute('data-model-badge', car.badge);
+    if (car.image) card.setAttribute('data-model-image', car.image);
+    if (car.credit_url) card.setAttribute('data-model-credit-url', car.credit_url);
+    if (car.credit_label) card.setAttribute('data-model-credit-label', car.credit_label);
+    if (car.gallery && car.gallery.length) {
+      card.setAttribute('data-model-gallery', JSON.stringify(car.gallery));
+    }
+    if (car.perks && car.perks.length) {
+      card.setAttribute('data-model-perks', JSON.stringify(car.perks));
+    }
+
+    var mainImg = qs('img[data-model-image], button[data-open-gallery] img', card);
+    setImg(mainImg, car.image, car.title);
+
+    qsa('span', card).forEach(function (sp) {
+      if (sp.className && String(sp.className).indexOf('skew-x-12') !== -1 && car.badge) {
+        text(sp, car.badge);
+      }
+    });
+
+    var h2 = qs('h2', card);
+    if (h2 && car.title) text(h2, car.title);
+
+    var paras = qsa('p', card);
+    if (paras[0] && car.eyebrow) text(paras[0], car.eyebrow);
+    if (paras[1] && car.benefit) text(paras[1], car.benefit);
+
+    qsa('a', card).forEach(function (a) {
+      var label = '';
+      var url = '';
+      var cls = String(a.className || '');
+      var isPrimary = cls.indexOf('FF9549') !== -1;
+      var txt = (a.textContent || '').trim();
+      if (isPrimary && car.cta_label) {
+        label = car.cta_label;
+        url = car.cta_url;
+      } else if (/Тест|Test|драйв|drive/i.test(txt) && car.td_label) {
+        label = car.td_label;
+        url = car.td_url;
+      } else if (/кредит|credit|Рассчитать|В кредит/i.test(txt) && car.credit_label) {
+        label = car.credit_label;
+        url = car.credit_url;
+      }
+      if (label) {
+        var span = qs('span:not([aria-hidden])', a);
+        if (span && span.children.length === 0) text(span, label);
+        else {
+          a.childNodes.forEach(function (n) {
+            if (n.nodeType === 3 && n.textContent.trim()) n.textContent = label + ' ';
+          });
+        }
+      }
+      if (url) a.setAttribute('href', url);
+    });
+
+    if (car.colors && car.colors.length) {
+      qsa('[data-color]', card).forEach(function (btn, i) {
+        var col = car.colors[i];
+        if (!col) return;
+        if (col.hex) {
+          btn.style.backgroundColor = col.hex;
+          btn.setAttribute('data-color-value', col.hex);
+        }
+        if (col.image) btn.setAttribute('data-color-image', col.image);
+      });
+    }
+
+    if (car.gallery && car.gallery.length) {
+      qsa('[data-open-gallery] img', card).forEach(function (img, i) {
+        if (img.hasAttribute('data-model-image')) return;
+        var src = car.gallery[i] || car.gallery[0];
+        setImg(img, src);
+      });
+    }
+
+    if (car.perks && car.perks.length) {
+      qsa('ul li span', card).forEach(function (sp, i) {
+        if (car.perks[i]) text(sp, car.perks[i]);
+      });
+    }
+  }
+
+  function applyModels(data) {
+    var cars = carsFromModels(data.models || {});
+    if (!cars.length) return;
+    var cards = qsa('#models [data-model-card]');
+    if (!cards.length) return;
+
+    if (cards.length === 1) {
+      applyModelCard(cards[0], matchCar(cars, cards[0]) || cars[0]);
+      return;
+    }
+
+    cards.forEach(function (card, i) {
+      applyModelCard(card, matchCar(cars, card) || cars[i]);
     });
   }
 
@@ -47,9 +278,16 @@
     var m = data.modal || {};
 
     applyDataCms(data);
+    applyModels(data);
 
     text(qs('.avto-loader-brand'), h.brand);
     text(qs('.avto-loader-sub'), h.loader_text);
+
+    if (h.logo_url) {
+      qsa('header a img, header img').forEach(function (img, i) {
+        if (i === 0) setImg(img, h.logo_url, h.brand);
+      });
+    }
 
     if (h.brand) {
       qsa('header span, .avto-loader-brand').forEach(function (el) {
@@ -139,6 +377,14 @@
           if (s) text(s, hero.cta_label);
         }
       }
+      if (hero.image_url) {
+        var heroImg = qs('img', heroRoot);
+        setImg(heroImg, hero.image_url, hero.title);
+      }
+      if (hero.image_mobile_url) {
+        var srcMob = qs('source[media]', heroRoot);
+        if (srcMob) srcMob.setAttribute('srcset', publicImg(hero.image_mobile_url));
+      }
     }
 
     if (cat.offer_title) {
@@ -178,6 +424,12 @@
       });
     }
 
+    if (cat.car1_image_url || cat.car2_image_url) {
+      var catImgs = qsa('#catalog img');
+      if (cat.car1_image_url && catImgs[0]) setImg(catImgs[0], cat.car1_image_url, cat.car1_title || 'TANK 300');
+      if (cat.car2_image_url && catImgs[1]) setImg(catImgs[1], cat.car2_image_url, cat.car2_title || 'TANK 500');
+    }
+
     var labels = [cat.countdown_days, cat.countdown_hours, cat.countdown_mins, cat.countdown_secs];
     qsa('#catalog [data-unit]').forEach(function (u, i) {
       var lab = qs('span.mt-1, span.uppercase', u);
@@ -185,10 +437,10 @@
     });
 
     if (cat.feature1_title) {
-      var cards = qsa('#catalog article h3, #catalog article .font-bold');
-      if (cards[0] && cat.feature1_title) text(cards[0], cat.feature1_title);
-      if (cards[1] && cat.feature2_title) text(cards[1], cat.feature2_title);
-      if (cards[2] && cat.feature3_title) text(cards[2], cat.feature3_title);
+      var featCards = qsa('#catalog article h3, #catalog article .font-bold');
+      if (featCards[0] && cat.feature1_title) text(featCards[0], cat.feature1_title);
+      if (featCards[1] && cat.feature2_title) text(featCards[1], cat.feature2_title);
+      if (featCards[2] && cat.feature3_title) text(featCards[2], cat.feature3_title);
       var texts = qsa('#catalog article p');
       if (texts[0] && cat.feature1_text) text(texts[0], cat.feature1_text);
       if (texts[1] && cat.feature2_text) text(texts[1], cat.feature2_text);

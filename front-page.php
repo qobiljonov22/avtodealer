@@ -1,5 +1,4 @@
 <?php
-// Home (1st page) — never inherit model-page context
 if (function_exists('avtodealer_set_page_context')) {
     avtodealer_set_page_context([
         'slug'          => 'home',

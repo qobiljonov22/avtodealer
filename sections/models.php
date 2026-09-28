@@ -134,7 +134,9 @@ if ($title_filter !== '') {
                                         width="900"
                                         height="480"
                                         loading="lazy"
-                                        data-model-image>
+                                        data-model-image
+                                        data-cms="models.<?php echo esc_attr($car['id'] ?? 'car1'); ?>_image_url"
+                                        data-cms-attr="src">
                                 </button>
                             </div>
 
