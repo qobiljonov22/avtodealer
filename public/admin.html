@@ -11,13 +11,13 @@
     header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#0c0f12;position:sticky;top:0;z-index:10}
     h1{margin:0;font-size:1.05rem;color:var(--accent)}
     .actions{display:flex;flex-wrap:wrap;gap:8px}
-    button,a.btn{appearance:none;border:1px solid var(--line);background:#1a222b;color:var(--text);border-radius:10px;padding:8px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+    button,a.btn{appearance:none;border:1px solid var(--line);background:#1a222b;color:var(--text);border-radius:10px;padding:8px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
     button.primary{background:var(--accent);color:#181818;border-color:transparent;font-weight:600}
     button.danger{background:transparent;border-color:rgba(255,100,80,.4);color:#ff8d7a}
     button:disabled{opacity:.5;cursor:wait}
     .wrap{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 58px)}
-    @media(max-width:800px){.wrap{grid-template-columns:1fr}}
-    nav{border-right:1px solid var(--line);padding:12px;background:#0c0f12}
+    @media(max-width:900px){.wrap{grid-template-columns:1fr}}
+    nav{border-right:1px solid var(--line);padding:12px;background:#0c0f12;max-height:calc(100vh - 58px);overflow:auto}
     nav button{width:100%;justify-content:flex-start;margin-bottom:6px;background:transparent}
     nav button.on{background:#1a222b;border-color:rgba(255,149,73,.45);color:var(--accent)}
     main{padding:16px 18px 40px}
@@ -30,123 +30,164 @@
     label.wide{grid-column:1/-1}
     input,textarea,select{width:100%;border:1px solid var(--line);background:#0e1318;color:var(--text);border-radius:10px;padding:10px 12px;font:inherit}
     textarea{min-height:88px;resize:vertical}
-    .toast{position:fixed;right:16px;bottom:16px;background:#1a222b;border:1px solid var(--line);padding:10px 14px;border-radius:12px;display:none;z-index:50}
+    .toast{position:fixed;right:16px;bottom:16px;background:#1a222b;border:1px solid var(--line);padding:10px 14px;border-radius:12px;display:none;z-index:50;max-width:min(420px,90vw)}
     .toast.show{display:block}
     .toast.ok{border-color:rgba(61,220,132,.4)}
+    .toast.err{border-color:rgba(255,100,80,.5)}
     .banner{background:rgba(255,149,73,.08);border:1px solid rgba(255,149,73,.25);border-radius:12px;padding:12px 14px;margin-bottom:14px;color:#ffd7bc;font-size:13px}
     code{background:#1a222b;padding:1px 6px;border-radius:6px}
+    .media{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;padding:12px;border:1px dashed var(--line);border-radius:12px;background:#12171c;margin-top:8px}
+    .media img{height:72px;max-width:140px;object-fit:contain;background:#0e1318;border-radius:8px}
+    .media .meta{flex:1;min-width:180px;display:flex;flex-direction:column;gap:8px}
+    .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:#1a222b;color:var(--muted)}
+    .badge.wp{color:var(--ok);border:1px solid rgba(61,220,132,.35)}
+    .badge.local{color:var(--accent);border:1px solid rgba(255,149,73,.35)}
   </style>
 </head>
 <body>
   <header>
-    <h1>Avtodealer Admin · offline CMS</h1>
+    <h1>Avtodealer Admin · CMS</h1>
     <div class="actions">
-      <a class="btn" href="/" target="_blank">Saytni ochish</a>
-      <button type="button" id="btn-export">JSON export</button>
-      <button type="button" class="danger" id="btn-reset">Defaultga qaytarish</button>
-      <button type="button" class="primary" id="btn-save">Saqlash</button>
+      <span class="badge" id="src-badge">…</span>
+      <a class="btn" href="/" target="_blank">Sayt</a>
+      <button type="button" id="btn-reload">WP dan yuklash</button>
+      <button type="button" id="btn-export">JSON</button>
+      <button type="button" class="danger" id="btn-reset">Reset</button>
+      <button type="button" class="primary" id="btn-save">Saqlash (PUT)</button>
     </div>
   </header>
   <div class="wrap">
     <nav id="tabs"></nav>
     <main>
       <div class="banner">
-        <strong>Vercel admin:</strong> <code>/admin/</code> — bu yerda ishlaydi.<br>
-        <code>/wp-admin</code> Vercelda <strong>403</strong> beradi (PHP yo‘q). Local WordPress uchun: <code>avtodealer.local/wp-admin</code>.
-        Ma’lumot brauzerda (<code>localStorage</code>) saqlanadi.
+        <strong>Rasmlar + matn:</strong> WordPress REST <code>GET/PUT/POST/DELETE</code>.<br>
+        Local WP: <code>avtodealer.local/wp-admin → Avtodealer</code> (Media Library).<br>
+        Vercel: shu <code>/admin/</code> — rasm URL yoki fayl yuklash → localStorage (WP yo‘q).
       </div>
       <div id="panel"></div>
     </main>
   </div>
   <div class="toast" id="toast"></div>
 
-  <script src="/js/avto-content.js"></script>
+  <script src="/js/avto-content.js?ver=4"></script>
   <script>
 (function () {
   var tabs = [
     { id: 'header', title: 'Header' },
     { id: 'hero', title: 'Hero' },
     { id: 'catalog', title: 'Catalog' },
+    { id: 'models', title: 'Models' },
+    { id: 'configs', title: 'Configs' },
+    { id: 'tradein', title: 'Trade-in' },
+    { id: 'credit', title: 'Credit' },
+    { id: 'corporate', title: 'Corporate' },
     { id: 'footer', title: 'Footer' },
     { id: 'modal', title: 'Modal' }
   ];
   var active = 'header';
   var data = null;
+  var fromWp = false;
   var panel = document.getElementById('panel');
   var tabsEl = document.getElementById('tabs');
   var toastEl = document.getElementById('toast');
+  var busy = false;
 
+  /* text fields + image URL keys per section */
   var fields = {
     header: [
-      ['brand', 'Brand'],
-      ['subtitle', 'Subtitle'],
-      ['phone', 'Telefon'],
-      ['phone_href', 'Tel link'],
-      ['status', 'Status'],
-      ['hours', 'Ish vaqti'],
-      ['address', 'Manzil', 'textarea'],
-      ['address_url', 'Manzil URL'],
-      ['service_label', 'Servis matni'],
-      ['service_url', 'Servis URL'],
-      ['testdrive_label', 'Test-drive matni'],
-      ['testdrive_url', 'Test-drive URL'],
-      ['callback_label', 'Callback tugma'],
-      ['loader_text', 'Loader matni'],
-      ['menu_label', 'Menu label']
+      ['brand', 'Brand'], ['subtitle', 'Subtitle'], ['phone', 'Telefon'], ['phone_href', 'Tel link'],
+      ['status', 'Status'], ['hours', 'Ish vaqti'], ['address', 'Manzil', 'textarea'],
+      ['service_label', 'Servis'], ['testdrive_label', 'Test-drive'], ['callback_label', 'Callback'],
+      ['logo_url', 'Logo URL', 'image']
     ],
     hero: [
-      ['eyebrow', 'Eyebrow'],
-      ['title', 'Title'],
-      ['subtitle', 'Subtitle', 'textarea'],
-      ['cta_label', 'CTA'],
-      ['cta_url', 'CTA URL']
+      ['eyebrow', 'Eyebrow'], ['title', 'Title'], ['subtitle', 'Subtitle', 'textarea'],
+      ['cta_label', 'CTA'], ['cta_url', 'CTA URL'],
+      ['image_url', 'Desktop rasm', 'image'], ['image_mobile_url', 'Mobile rasm', 'image']
     ],
     catalog: [
-      ['offer_title', 'Offer title', 'textarea'],
-      ['offer_cta_label', 'Offer CTA'],
-      ['offer_cta_url', 'Offer URL'],
-      ['countdown_days', 'Kun'],
-      ['countdown_hours', 'Soat'],
-      ['countdown_mins', 'Daqiqa'],
-      ['countdown_secs', 'Soniya'],
-      ['feature1_title', 'Card 1 title'],
-      ['feature1_text', 'Card 1 text', 'textarea'],
-      ['feature2_title', 'Card 2 title'],
-      ['feature2_text', 'Card 2 text', 'textarea'],
-      ['feature3_title', 'Card 3 title'],
-      ['feature3_text', 'Card 3 text', 'textarea'],
+      ['offer_title', 'Offer', 'textarea'], ['offer_cta_label', 'Offer CTA'],
       ['promo_title', 'Promo', 'textarea'],
-      ['car1_title', 'Car 1 title'],
-      ['car1_label', 'Car 1 label (ostida)'],
-      ['car2_title', 'Car 2 title'],
-      ['car2_label', 'Car 2 label (ostida)']
+      ['car1_title', 'Car 1 title'], ['car1_label', 'Car 1 label'],
+      ['car2_title', 'Car 2 title'], ['car2_label', 'Car 2 label'],
+      ['car1_image_url', 'Car 1 rasm', 'image'], ['car2_image_url', 'Car 2 rasm', 'image']
+    ],
+    models: [
+      ['car1_eyebrow', '300 eyebrow'], ['car1_title', '300 title'], ['car1_benefit', '300 benefit', 'textarea'],
+      ['car1_badge', '300 badge'], ['car1_cta_label', '300 CTA'], ['car1_td_label', '300 TD'],
+      ['car1_credit_label', '300 credit'], ['car1_perks', '300 perks', 'textarea'],
+      ['car1_image_url', '300 asosiy rasm', 'image'],
+      ['car1_g1_url', '300 gallery 1', 'image'], ['car1_g2_url', '300 gallery 2', 'image'],
+      ['car1_g3_url', '300 gallery 3', 'image'], ['car1_g4_url', '300 gallery 4', 'image'],
+      ['car1_g5_url', '300 gallery 5', 'image'],
+      ['car2_eyebrow', '500 eyebrow'], ['car2_title', '500 title'], ['car2_benefit', '500 benefit', 'textarea'],
+      ['car2_badge', '500 badge'], ['car2_cta_label', '500 CTA'], ['car2_td_label', '500 TD'],
+      ['car2_credit_label', '500 credit'], ['car2_perks', '500 perks', 'textarea'],
+      ['car2_image_url', '500 asosiy rasm', 'image'],
+      ['car2_g1_url', '500 gallery 1', 'image'], ['car2_g2_url', '500 gallery 2', 'image'],
+      ['car2_g3_url', '500 gallery 3', 'image'], ['car2_g4_url', '500 gallery 4', 'image'],
+      ['car2_g5_url', '500 gallery 5', 'image']
+    ],
+    configs: [
+      ['title', 'Sarlavha'], ['visible_count', 'Visible'], ['more_label', 'More'],
+      ['cta_label', 'CTA'], ['link_label', 'Link'],
+      ['trim1_title', 'Trim1'], ['trim1_image_url', 'Trim1 rasm', 'image'],
+      ['trim2_title', 'Trim2'], ['trim2_image_url', 'Trim2 rasm', 'image'],
+      ['trim3_title', 'Trim3'], ['trim3_image_url', 'Trim3 rasm', 'image'],
+      ['trim4_title', 'Trim4'], ['trim4_image_url', 'Trim4 rasm', 'image']
+    ],
+    tradein: [
+      ['title', 'Title', 'textarea'], ['text', 'Text', 'textarea'],
+      ['cta_label', 'CTA'], ['cta_url', 'CTA URL'], ['image_url', 'Rasm', 'image']
+    ],
+    credit: [
+      ['title', 'Title'], ['subtitle', 'Subtitle'], ['placeholder', 'Placeholder'],
+      ['button', 'Button'], ['note', 'Note', 'textarea'], ['image_url', 'Rasm', 'image']
+    ],
+    corporate: [
+      ['title', 'Title', 'textarea'], ['cta_label', 'CTA'], ['person_name', 'Ism'],
+      ['person_role', 'Lavozim', 'textarea'], ['photo_url', 'Foto', 'image']
     ],
     footer: [
-      ['disclaimer_title', 'Disclaimer title'],
-      ['link_legal', 'Huquqiy link'],
-      ['link_promo', 'Aksiya link'],
-      ['copy_note', 'Copy note', 'textarea'],
-      ['legal1', 'Legal 1', 'textarea'],
-      ['legal2', 'Legal 2', 'textarea']
+      ['disclaimer_title', 'Disclaimer'], ['link_legal', 'Legal link'], ['link_promo', 'Promo link'],
+      ['copy_note', 'Copy', 'textarea'], ['legal1', 'Legal 1', 'textarea'], ['legal2', 'Legal 2', 'textarea']
     ],
     modal: [
-      ['title', 'Title'],
-      ['subtitle', 'Subtitle', 'textarea'],
-      ['model_label', 'Model label'],
-      ['model_options', 'Modellar (har qator)', 'textarea'],
-      ['phone_label', 'Phone label'],
-      ['phone_placeholder', 'Phone placeholder'],
-      ['button', 'Button'],
-      ['consent', 'Consent', 'textarea'],
-      ['success', 'Success'],
-      ['close_label', 'Close label']
+      ['title', 'Title'], ['subtitle', 'Subtitle', 'textarea'], ['model_label', 'Model label'],
+      ['model_options', 'Models', 'textarea'], ['phone_label', 'Phone'], ['button', 'Button'],
+      ['consent', 'Consent', 'textarea']
     ]
   };
 
   function toast(msg, ok) {
     toastEl.textContent = msg;
-    toastEl.className = 'toast show' + (ok ? ' ok' : '');
-    setTimeout(function () { toastEl.className = 'toast'; }, 2200);
+    toastEl.className = 'toast show ' + (ok === false ? 'err' : ok ? 'ok' : '');
+    setTimeout(function () { toastEl.className = 'toast'; }, 2800);
+  }
+
+  function qsa(sel, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(sel));
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  }
+  function escAttr(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
+
+  function restBase() {
+    if (typeof avtodealerFront !== 'undefined' && avtodealerFront && avtodealerFront.restUrl) {
+      return String(avtodealerFront.restUrl).replace(/\/?$/, '/');
+    }
+    return '/wp-json/avtodealer/v1/';
+  }
+
+  function updateBadge() {
+    var b = document.getElementById('src-badge');
+    if (!b) return;
+    b.className = 'badge ' + (fromWp ? 'wp' : 'local');
+    b.textContent = fromWp ? 'WP REST' : 'localStorage';
   }
 
   function readForm() {
@@ -156,8 +197,6 @@
       data[active][inp.getAttribute('data-field')] = inp.value;
     });
   }
-
-  function qsa(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
 
   function renderTabs() {
     tabsEl.innerHTML = tabs.map(function (t) {
@@ -172,46 +211,159 @@
     });
   }
 
+  function mediaBlock(key, label, val) {
+    return (
+      '<label class="wide">' + esc(label) +
+      '<div class="media">' +
+      (val ? '<img src="' + escAttr(val) + '" alt="">' : '<img alt="" style="display:none">') +
+      '<div class="meta">' +
+      '<input data-field="' + escAttr(key) + '" value="' + escAttr(val) + '" placeholder="https://… yoki /images/…">' +
+      '<input type="file" accept="image/*" data-file-for="' + escAttr(key) + '">' +
+      '</div></div></label>'
+    );
+  }
+
   function render() {
     renderTabs();
+    updateBadge();
     var section = (data && data[active]) || {};
     var list = fields[active] || [];
-    var html = '<div class="card"><h2>' + active + '</h2><p class="note">Saqlash → saytda darhol ko‘rinadi (shu brauzer).</p><div class="grid">';
+    var html = '<div class="card"><h2>' + active + '</h2>' +
+      '<p class="note">GET → forma · Saqlash = PUT (WP) yoki localStorage. Rasmlar URL yoki fayl.</p><div class="grid">';
     list.forEach(function (f) {
       var key = f[0], label = f[1], type = f[2] || 'text';
       var val = section[key] != null ? section[key] : '';
-      var wide = type === 'textarea' ? ' wide' : '';
-      if (type === 'textarea') {
-        html += '<label class="' + wide.trim() + '">' + label + '<textarea data-field="' + key + '">' + esc(val) + '</textarea></label>';
+      if (type === 'image') {
+        html += mediaBlock(key, label, val);
+      } else if (type === 'textarea') {
+        html += '<label class="wide">' + esc(label) + '<textarea data-field="' + escAttr(key) + '">' + esc(val) + '</textarea></label>';
       } else {
-        html += '<label class="' + wide.trim() + '">' + label + '<input data-field="' + key + '" value="' + escAttr(val) + '"></label>';
+        html += '<label>' + esc(label) + '<input data-field="' + escAttr(key) + '" value="' + escAttr(val) + '"></label>';
       }
     });
     html += '</div></div>';
     panel.innerHTML = html;
+
+    qsa('[data-file-for]').forEach(function (fileInp) {
+      fileInp.addEventListener('change', function () {
+        var file = fileInp.files && fileInp.files[0];
+        if (!file) return;
+        var key = fileInp.getAttribute('data-file-for');
+        var reader = new FileReader();
+        reader.onload = function () {
+          var url = String(reader.result || '');
+          var field = panel.querySelector('[data-field="' + key + '"]');
+          if (field) field.value = url;
+          var img = fileInp.closest('.media') && fileInp.closest('.media').querySelector('img');
+          if (img) {
+            img.src = url;
+            img.style.display = '';
+          }
+          toast('Rasm yuklandi · Saqlashni bosing', true);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
   }
 
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-  }
-  function escAttr(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  function payloadForWp(sectionId, sectionData) {
+    var out = {};
+    Object.keys(sectionData || {}).forEach(function (k) {
+      if (k === 'cars' || k === 'i18n' || k === 'crud' || k === 'items') return;
+      if (/_default$/.test(k)) return;
+      out[k] = sectionData[k];
+    });
+    return out;
   }
 
-  function save() {
+  /** Map image_url → try keep; WP prefers *_id from Media. Offline stores URLs. */
+  async function putSection(id, body) {
+    var url = restBase() + id;
+    var headers = { 'Content-Type': 'application/json' };
+    if (typeof avtodealerFront !== 'undefined' && avtodealerFront && avtodealerFront.nonce) {
+      headers['X-WP-Nonce'] = avtodealerFront.nonce;
+    }
+    var res = await fetch(url, {
+      method: 'PUT',
+      headers: headers,
+      credentials: 'same-origin',
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error('PUT ' + id + ' · HTTP ' + res.status);
+    return res.json();
+  }
+
+  async function deleteSection(id) {
+    var headers = {};
+    if (typeof avtodealerFront !== 'undefined' && avtodealerFront && avtodealerFront.nonce) {
+      headers['X-WP-Nonce'] = avtodealerFront.nonce;
+    }
+    var res = await fetch(restBase() + id, { method: 'DELETE', headers: headers, credentials: 'same-origin' });
+    if (!res.ok) throw new Error('DELETE ' + id + ' · HTTP ' + res.status);
+    return res.json();
+  }
+
+  async function save() {
+    if (busy) return;
     readForm();
-    AvtoContent.saveContent(data);
-    data = AvtoContent.deepMerge(AvtoContent.DEFAULTS, AvtoContent.readLocal() || {});
-    toast('Saqlandi · saytni yangilang', true);
+    busy = true;
+    document.getElementById('btn-save').disabled = true;
+    try {
+      // Always persist local
+      AvtoContent.saveContent(data);
+
+      // Try WP PUT for active section
+      try {
+        var updated = await putSection(active, payloadForWp(active, data[active]));
+        if (updated && typeof updated === 'object') {
+          data[active] = AvtoContent.deepMerge(data[active] || {}, updated);
+          fromWp = true;
+          AvtoContent.saveContent(data);
+          toast('PUT OK · ' + active + ' (WP + local)', true);
+        } else {
+          toast('Local saqlandi (WP javob yo‘q)', true);
+        }
+      } catch (wpErr) {
+        toast('Local saqlandi · WP: ' + (wpErr.message || 'offline'), true);
+        fromWp = false;
+      }
+      updateBadge();
+      render();
+    } finally {
+      busy = false;
+      document.getElementById('btn-save').disabled = false;
+    }
+  }
+
+  async function reloadFromWp() {
+    busy = true;
+    try {
+      var d = await AvtoContent.loadContent();
+      data = d;
+      fromWp = !!(d && d._fromWp);
+      render();
+      toast(fromWp ? 'WP dan yuklandi (GET)' : 'Default / local', fromWp);
+    } catch (e) {
+      toast('Yuklash xato', false);
+    } finally {
+      busy = false;
+    }
   }
 
   document.getElementById('btn-save').addEventListener('click', save);
-  document.getElementById('btn-reset').addEventListener('click', function () {
-    if (!confirm('Barcha local o‘zgarishlar o‘chadi. Davom?')) return;
+  document.getElementById('btn-reload').addEventListener('click', reloadFromWp);
+  document.getElementById('btn-reset').addEventListener('click', async function () {
+    if (!confirm('Defaultga qaytarilsinmi?')) return;
+    try {
+      await deleteSection(active);
+      toast('DELETE OK · ' + active, true);
+    } catch (e) {
+      /* ignore if no WP */
+    }
     AvtoContent.clearLocal();
     data = AvtoContent.deepMerge(AvtoContent.DEFAULTS, {});
+    fromWp = false;
     render();
-    toast('Default tiklandi', true);
   });
   document.getElementById('btn-export').addEventListener('click', function () {
     readForm();
@@ -225,6 +377,7 @@
 
   AvtoContent.loadContent().then(function (d) {
     data = d;
+    fromWp = !!(d && d._fromWp);
     render();
   });
 })();

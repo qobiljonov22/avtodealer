@@ -82,13 +82,28 @@ function avtodealer_sanitize_models($input)
         $url_keys[] = "{$car}_td_url";
         $url_keys[] = "{$car}_credit_url";
         $url_keys[] = "{$car}_offer_url";
+        $url_keys[] = "{$car}_image_url";
         $id_keys[] = "{$car}_image_id";
         foreach (['g1', 'g2', 'g3', 'g4', 'g5'] as $g) {
             $id_keys[] = "{$car}_{$g}_id";
+            $url_keys[] = "{$car}_{$g}_url";
         }
     }
 
-    return avtodealer_sanitize_by_schema($input, $defaults, $url_keys, $id_keys, $textarea_keys);
+    return avtodealer_sanitize_by_schema($input, $defaults + [
+        'car1_image_url' => '',
+        'car1_g1_url' => '',
+        'car1_g2_url' => '',
+        'car1_g3_url' => '',
+        'car1_g4_url' => '',
+        'car1_g5_url' => '',
+        'car2_image_url' => '',
+        'car2_g1_url' => '',
+        'car2_g2_url' => '',
+        'car2_g3_url' => '',
+        'car2_g4_url' => '',
+        'car2_g5_url' => '',
+    ], $url_keys, $id_keys, $textarea_keys);
 }
 
 function avtodealer_models_parse_lines($raw)
@@ -154,13 +169,15 @@ function avtodealer_get_models($lang = null)
     foreach (['car1', 'car2'] as $key) {
         $image = avtodealer_resolve_image_url(
             absint($data["{$key}_image_id"] ?? 0),
-            $defaults["{$key}_image_default"] ?? ''
+            $defaults["{$key}_image_default"] ?? '',
+            $data["{$key}_image_url"] ?? ''
         );
         $gallery = [];
         foreach (['g1', 'g2', 'g3', 'g4', 'g5'] as $g) {
             $gallery[] = avtodealer_resolve_image_url(
                 absint($data["{$key}_{$g}_id"] ?? 0),
-                $defaults["{$key}_{$g}_default"] ?? ''
+                $defaults["{$key}_{$g}_default"] ?? '',
+                $data["{$key}_{$g}_url"] ?? ''
             );
             $data["{$key}_{$g}_url"] = end($gallery);
         }
@@ -209,10 +226,8 @@ function avtodealer_save_models($input, $replace = false, $lang = null)
     $defaults = avtodealer_models_defaults($lang);
     $strip = ['cars', 'lang'];
     foreach (['car1', 'car2'] as $key) {
-        $strip[] = "{$key}_image_url";
         $strip[] = "{$key}_image_default";
         foreach (['g1', 'g2', 'g3', 'g4', 'g5'] as $g) {
-            $strip[] = "{$key}_{$g}_url";
             $strip[] = "{$key}_{$g}_default";
         }
     }

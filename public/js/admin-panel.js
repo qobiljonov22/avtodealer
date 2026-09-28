@@ -191,18 +191,23 @@
 
   function mediaRow(title, imgUrl, btnId, imgId) {
     return (
-      '<div class="mb-3 flex items-start gap-3 rounded-sm border border-dashed border-[#c3c4c7] bg-[#f6f7f7] p-3">' +
-      (imgUrl
-        ? '<img id="' +
-          esc(imgId) +
-          '" src="' +
-          esc(imgUrl) +
-          '" alt="" class="h-16 max-w-[120px] object-contain">'
-        : '<span id="' + esc(imgId) + '-empty" class="text-[#646970]">Rasm yo‘q</span>') +
-      '<div><div class="mb-1 font-semibold">' +
+      '<div class="mb-3 flex flex-wrap items-start gap-3 rounded-sm border border-dashed border-[#c3c4c7] bg-[#f6f7f7] p-3">' +
+      '<img id="' +
+      esc(imgId) +
+      '" src="' +
+      esc(imgUrl || '') +
+      '" alt="" class="h-16 max-w-[140px] object-contain bg-white ' +
+      (imgUrl ? '' : 'hidden') +
+      '">' +
+      '<div class="min-w-[160px]">' +
+      '<div class="mb-1 font-semibold">' +
       esc(title) +
       '</div>' +
+      '<div class="flex flex-wrap gap-2">' +
       btn('Media tanlash', '', 'id="' + esc(btnId) + '"') +
+      btn('O‘chirish', '', 'id="' + esc(btnId) + '-clear" data-clear-img="' + esc(imgId) + '"') +
+      '</div>' +
+      '<p class="mt-1 m-0 text-[11px] text-[#646970]">WordPress Media — GET/PUT orqali saqlanadi</p>' +
       '</div></div>'
     );
   }
@@ -279,9 +284,28 @@
           dirty = true;
         }
         var img = document.getElementById(imgId);
-        if (img) img.src = attachment.url;
+        if (img) {
+          img.src = attachment.url;
+          img.classList.remove('hidden');
+        }
       });
       frame.open();
+    };
+  }
+
+  function mediaClear(inputName, imgId) {
+    return function () {
+      var form = document.getElementById('avto-edit-form');
+      var input = form && form.querySelector('[name="' + inputName + '"]');
+      if (input) {
+        input.value = '0';
+        dirty = true;
+      }
+      var img = document.getElementById(imgId);
+      if (img) {
+        img.removeAttribute('src');
+        img.classList.add('hidden');
+      }
     };
   }
 
@@ -613,6 +637,90 @@
       }
       return carFields('car1', 'TANK 300') + carFields('car2', 'TANK 500');
     }
+    if (activeTab === 'configs') {
+      var trimHtml = '';
+      var mediaHtml = '';
+      for (var i = 1; i <= 6; i++) {
+        trimHtml += group(
+          'Trim ' + i,
+          field('trim' + i + '_title', 'Nomi', d['trim' + i + '_title']) +
+            field('trim' + i + '_specs', 'Specs', d['trim' + i + '_specs'], { wide: true }) +
+            field('trim' + i + '_price', 'Narx', d['trim' + i + '_price']) +
+            field('trim' + i + '_perks', 'Afzalliklar', d['trim' + i + '_perks'], {
+              wide: true,
+              type: 'textarea',
+            }) +
+            field('trim' + i + '_image_id', 'Rasm ID', d['trim' + i + '_image_id'], { type: 'number' })
+        );
+        mediaHtml += mediaRow(
+          'Trim ' + i,
+          d['trim' + i + '_image_url'],
+          'pick-trim' + i,
+          'img-trim' + i
+        );
+      }
+      return (
+        group(
+          'Umumiy',
+          field('title', 'Sarlavha', d.title, { wide: true }) +
+            field('visible_count', 'Boshida nechta', d.visible_count, { type: 'number' }) +
+            field('more_label', 'Ko‘proq tugma', d.more_label) +
+            field('cta_label', 'CTA', d.cta_label) +
+            field('cta_url', 'CTA URL', d.cta_url) +
+            field('link_label', 'Link', d.link_label)
+        ) +
+        trimHtml +
+        mediaHtml
+      );
+    }
+    if (activeTab === 'tradein') {
+      return (
+        group(
+          'Trade-in',
+          field('title', 'Title', d.title, { wide: true, type: 'textarea' }) +
+            field('text', 'Text', d.text, { wide: true, type: 'textarea' }) +
+            field('cta_label', 'CTA', d.cta_label) +
+            field('cta_url', 'CTA URL', d.cta_url) +
+            field('image_id', 'Rasm ID', d.image_id, { type: 'number' })
+        ) + mediaRow('Rasm', d.image_url, 'pick-tradein', 'img-tradein')
+      );
+    }
+    if (activeTab === 'credit') {
+      return (
+        group(
+          'Credit',
+          field('title', 'Title', d.title, { wide: true }) +
+            field('subtitle', 'Subtitle', d.subtitle, { wide: true }) +
+            field('placeholder', 'Phone placeholder', d.placeholder) +
+            field('button', 'Button', d.button) +
+            field('note', 'Note', d.note, { wide: true, type: 'textarea' }) +
+            field('image_id', 'Rasm ID', d.image_id, { type: 'number' })
+        ) + mediaRow('Rasm', d.image_url, 'pick-credit', 'img-credit')
+      );
+    }
+    if (activeTab === 'corporate') {
+      return (
+        group(
+          'Corporate',
+          field('title', 'Title', d.title, { wide: true }) +
+            field('cta_label', 'CTA', d.cta_label) +
+            field('cta_url', 'CTA URL', d.cta_url) +
+            field('person_name', 'Ism', d.person_name) +
+            field('person_role', 'Lavozim', d.person_role, { wide: true, type: 'textarea' }) +
+            field('photo_id', 'Foto ID', d.photo_id, { type: 'number' })
+        ) + mediaRow('Foto', d.photo_url, 'pick-photo', 'img-photo')
+      );
+    }
+    if (activeTab === 'contact') {
+      return group(
+        'Contact',
+        field('title', 'Title', d.title || '', { wide: true }) +
+          field('address_label', 'Address label', d.address_label || '') +
+          field('phone_label', 'Phone label', d.phone_label || '') +
+          field('hours_label', 'Hours label', d.hours_label || '') +
+          field('map_embed', 'Map embed', d.map_embed || '', { wide: true, type: 'textarea' })
+      );
+    }
     if (activeTab === 'footer') {
       return group(
         'Footer',
@@ -741,6 +849,7 @@
         busy = true;
         update.disabled = true;
         try {
+          loading = true;
           currentData = await api(activeTab, 'PUT', formData(f));
           dirty = false;
           notice('Updated · ' + activeLang.toUpperCase());
@@ -801,17 +910,28 @@
       ['pick-car2-g3', 'car2_g3_id', 'img-car2-g3'],
       ['pick-car2-g4', 'car2_g4_id', 'img-car2-g4'],
       ['pick-car2-g5', 'car2_g5_id', 'img-car2-g5'],
+      ['pick-tradein', 'image_id', 'img-tradein'],
+      ['pick-credit', 'image_id', 'img-credit'],
+      ['pick-photo', 'photo_id', 'img-photo'],
+      ['pick-trim1', 'trim1_image_id', 'img-trim1'],
+      ['pick-trim2', 'trim2_image_id', 'img-trim2'],
+      ['pick-trim3', 'trim3_image_id', 'img-trim3'],
+      ['pick-trim4', 'trim4_image_id', 'img-trim4'],
+      ['pick-trim5', 'trim5_image_id', 'img-trim5'],
+      ['pick-trim6', 'trim6_image_id', 'img-trim6'],
     ];
     picks.forEach(function (row) {
       var el = document.getElementById(row[0]);
       if (el) el.addEventListener('click', mediaPick(row[1], row[2]));
+      var clr = document.getElementById(row[0] + '-clear');
+      if (clr) clr.addEventListener('click', mediaClear(row[1], row[2]));
     });
   }
 
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && (e.key || '').toLowerCase() === 's' && view === 'edit') {
       e.preventDefault();
-      var u = document.getElementById('');
+      var u = document.getElementById('avto-update');
       if (u) u.click();
     }
   });

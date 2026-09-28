@@ -280,6 +280,40 @@
     applyDataCms(data);
     applyModels(data);
 
+    // Trade-in / Credit / Corporate rasmlar
+    var trade = data.tradein || {};
+    if (trade.image_url) {
+      var tImg = qs('#tradein img, [data-tradein-image], section[aria-label*="Trade"] img');
+      setImg(tImg, trade.image_url);
+    }
+    if (trade.title) {
+      var tH = qs('#tradein h2, section[aria-label*="Trade"] h2');
+      text(tH, String(trade.title).split('\n')[0]);
+    }
+    var credit = data.credit || {};
+    if (credit.image_url) {
+      var cImg = qs('#credit img, [data-credit-image]');
+      setImg(cImg, credit.image_url);
+    }
+    if (credit.title) text(qs('#credit h2'), credit.title);
+    if (credit.subtitle) {
+      var cSub = qs('#credit h2 + p, #credit .subtitle');
+      text(cSub, credit.subtitle);
+    }
+    var corp = data.corporate || {};
+    if (corp.photo_url) {
+      var pImg = qs('#corporate img, [data-corporate-photo]');
+      setImg(pImg, corp.photo_url);
+    }
+    if (corp.title) text(qs('#corporate h2'), corp.title);
+    if (corp.person_name) {
+      qsa('#corporate p, #corporate .font-bold').forEach(function (el) {
+        if (/Татьяна|Sannikova|name/i.test(el.textContent) || el.getAttribute('data-person-name') != null) {
+          text(el, corp.person_name);
+        }
+      });
+    }
+
     text(qs('.avto-loader-brand'), h.brand);
     text(qs('.avto-loader-sub'), h.loader_text);
 

@@ -9,12 +9,20 @@ function avtodealer_theme_image($name)
     return get_template_directory_uri() . '/images/' . rawurlencode($name);
 }
 
-function avtodealer_resolve_image_url($id, $default = '')
+function avtodealer_resolve_image_url($id, $default = '', $override = '')
 {
     $id = absint($id);
     $url = $id ? (string) wp_get_attachment_image_url($id, 'full') : '';
+    if ($url !== '') {
+        return $url;
+    }
 
-    return $url !== '' ? $url : (string) $default;
+    $override = esc_url_raw((string) $override);
+    if ($override !== '') {
+        return $override;
+    }
+
+    return (string) $default;
 }
 
 function avtodealer_sanitize_by_schema($input, $defaults, $url_keys = [], $id_keys = [], $textarea_keys = [])
@@ -258,10 +266,10 @@ function avtodealer_sanitize_tradein($input)
 {
     return avtodealer_sanitize_by_schema(
         $input,
-        avtodealer_tradein_defaults(),
-        ['cta_url'],
+        avtodealer_tradein_defaults() + ['image_url' => ''],
+        ['cta_url', 'image_url'],
         ['image_id'],
-        ['text']
+        ['text', 'title']
     );
 }
 
@@ -271,7 +279,7 @@ function avtodealer_get_tradein($lang = null)
     $data = avtodealer_crud_get('avtodealer_tradein', $defaults, $lang);
     $id = absint($data['image_id'] ?? 0);
     $data['image_id'] = $id;
-    $data['image_url'] = avtodealer_resolve_image_url($id, $defaults['image_default'] ?? '');
+    $data['image_url'] = avtodealer_resolve_image_url($id, $defaults['image_default'] ?? '', $data['image_url'] ?? '');
     $data['cta_url'] = avtodealer_href($data['cta_url'] ?? '', '#credit');
     $data['lang'] = $lang ?: avtodealer_current_lang();
 
@@ -283,12 +291,12 @@ function avtodealer_save_tradein($input, $replace = false, $lang = null)
     $lang = $lang ?: avtodealer_current_lang();
     avtodealer_crud_save(
         'avtodealer_tradein',
-        avtodealer_tradein_defaults($lang),
+        avtodealer_tradein_defaults($lang) + ['image_url' => ''],
         'avtodealer_sanitize_tradein',
         $input,
         $replace,
         $lang,
-        ['image_url', 'image_default', 'lang']
+        ['image_default', 'lang']
     );
 
     return avtodealer_get_tradein($lang);
@@ -327,8 +335,8 @@ function avtodealer_sanitize_credit($input)
 {
     return avtodealer_sanitize_by_schema(
         $input,
-        avtodealer_credit_defaults(),
-        [],
+        avtodealer_credit_defaults() + ['image_url' => ''],
+        ['image_url'],
         ['image_id'],
         ['subtitle', 'note']
     );
@@ -340,7 +348,7 @@ function avtodealer_get_credit($lang = null)
     $data = avtodealer_crud_get('avtodealer_credit', $defaults, $lang);
     $id = absint($data['image_id'] ?? 0);
     $data['image_id'] = $id;
-    $data['image_url'] = avtodealer_resolve_image_url($id, $defaults['image_default'] ?? '');
+    $data['image_url'] = avtodealer_resolve_image_url($id, $defaults['image_default'] ?? '', $data['image_url'] ?? '');
     $data['lang'] = $lang ?: avtodealer_current_lang();
 
     return $data;
@@ -351,12 +359,12 @@ function avtodealer_save_credit($input, $replace = false, $lang = null)
     $lang = $lang ?: avtodealer_current_lang();
     avtodealer_crud_save(
         'avtodealer_credit',
-        avtodealer_credit_defaults($lang),
+        avtodealer_credit_defaults($lang) + ['image_url' => ''],
         'avtodealer_sanitize_credit',
         $input,
         $replace,
         $lang,
-        ['image_url', 'image_default', 'lang']
+        ['image_default', 'lang']
     );
 
     return avtodealer_get_credit($lang);
@@ -395,8 +403,8 @@ function avtodealer_sanitize_corporate($input)
 {
     return avtodealer_sanitize_by_schema(
         $input,
-        avtodealer_corporate_defaults(),
-        ['cta_url'],
+        avtodealer_corporate_defaults() + ['photo_url' => ''],
+        ['cta_url', 'photo_url'],
         ['photo_id'],
         ['person_role']
     );
@@ -408,7 +416,7 @@ function avtodealer_get_corporate($lang = null)
     $data = avtodealer_crud_get('avtodealer_corporate', $defaults, $lang);
     $id = absint($data['photo_id'] ?? 0);
     $data['photo_id'] = $id;
-    $data['photo_url'] = avtodealer_resolve_image_url($id, $defaults['photo_default'] ?? '');
+    $data['photo_url'] = avtodealer_resolve_image_url($id, $defaults['photo_default'] ?? '', $data['photo_url'] ?? '');
     $data['cta_url'] = avtodealer_href($data['cta_url'] ?? '', '#credit');
     $data['lang'] = $lang ?: avtodealer_current_lang();
 
@@ -420,12 +428,12 @@ function avtodealer_save_corporate($input, $replace = false, $lang = null)
     $lang = $lang ?: avtodealer_current_lang();
     avtodealer_crud_save(
         'avtodealer_corporate',
-        avtodealer_corporate_defaults($lang),
+        avtodealer_corporate_defaults($lang) + ['photo_url' => ''],
         'avtodealer_sanitize_corporate',
         $input,
         $replace,
         $lang,
-        ['photo_url', 'photo_default', 'lang']
+        ['photo_default', 'lang']
     );
 
     return avtodealer_get_corporate($lang);
